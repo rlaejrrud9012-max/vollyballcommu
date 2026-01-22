@@ -21,11 +21,8 @@
     </script>
     <style>
         body { background-color: #09090B; color: #FAFAFA; }
-        .hidden-tab { display: none; } .active-tab-btn { border-bottom-color: #00AEEF; color: #00AEEF; }
-        /* 팝업 애니메이션 */
-        #tournament-modal { transition: opacity 0.2s ease-in-out; }
-        #tournament-modal.hidden { opacity: 0; pointer-events: none; }
-        #tournament-modal:not(.hidden) { opacity: 1; pointer-events: auto; }
+        .hidden-tab { display: none; }
+        /* 팝업 관련 스타일 제거하고 Tailwind 유틸리티만 사용 */
     </style>
 </head>
 <body class="h-screen w-full flex text-sm">
@@ -49,7 +46,7 @@
         </header>
 
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <button onclick="openModal()" class="group relative rounded-xl bg-surface border border-border overflow-hidden hover:border-brand-end/50 transition-all hover:-translate-y-1 text-left">
+            <button onclick="openModal()" class="group relative rounded-xl bg-surface border border-border overflow-hidden hover:border-brand-end/50 transition-all hover:-translate-y-1 text-left w-full">
                 <div class="h-36 w-full bg-zinc-800 relative">
                     <img src="https://images.unsplash.com/photo-1612872087720-48ca45e4c6c0?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
                     <div class="absolute top-2 left-2 flex gap-1.5">
@@ -65,13 +62,13 @@
                     </div>
                 </div>
             </button>
-            </div>
+        </div>
     </main>
 
-
-    <div id="tournament-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 sm:p-6">
+    <div id="tournament-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-6">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal()"></div>
-        <div class="bg-background w-full max-w-2xl rounded-2xl overflow-hidden relative z-10 shadow-2xl border border-border max-h-[90vh] flex flex-col">
+        
+        <div class="bg-background w-full max-w-2xl rounded-2xl overflow-hidden relative z-10 shadow-2xl border border-border max-h-[90vh] flex flex-col animate-fade-in-up">
             
             <div class="sticky top-0 z-10 bg-background/95 backdrop-blur-md border-b border-border px-4 py-3 flex justify-between items-center shrink-0">
                 <h2 class="text-lg font-bold truncate pr-4">제1회 제미나이배 전국남녀생활체육배구대회</h2>
@@ -135,10 +132,7 @@
                             <div>
                                 <h3 class="text-sm font-bold mb-3 flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-brand-start"></i> 경기장</h3>
                                 <div class="flex items-center gap-3 bg-surface p-4 rounded-xl border border-border justify-between">
-                                    <div>
-                                        <h4 class="font-bold text-primary text-sm">광명시민체육관</h4>
-                                        <p class="text-xs text-muted mt-0.5">경기도 광명시 철산동 오리로 703</p>
-                                    </div>
+                                    <div><h4 class="font-bold text-primary text-sm">광명시민체육관</h4><p class="text-xs text-muted mt-0.5">경기도 광명시 철산동 오리로 703</p></div>
                                     <a href="https://www.google.com/maps/search/?api=1&query=광명시민체육관" target="_blank" class="p-2 rounded-lg bg-background border border-border text-brand-end hover:bg-surface transition-colors"><i data-lucide="map" class="w-5 h-5"></i></a>
                                 </div>
                             </div>
@@ -149,23 +143,34 @@
              <div class="p-4 border-t border-border bg-background shrink-0">
                 <button class="w-full py-3 rounded-xl bg-gradient-to-r from-brand-start to-brand-end text-white font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-brand-start/20">참가 신청하기</button>
             </div>
-
         </div>
     </div>
 
     <script>
         lucide.createIcons();
-        // 팝업 열기/닫기
-        function openModal() { document.getElementById('tournament-modal').classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
-        function closeModal() { document.getElementById('tournament-modal').classList.add('hidden'); document.body.style.overflow = ''; }
-        // 탭 전환
+
+        // [핵심] 모달 제어 로직 수정 (Flex로 명확하게 표시)
+        function openModal() { 
+            const modal = document.getElementById('tournament-modal');
+            modal.classList.remove('hidden'); 
+            modal.classList.add('flex'); // hidden 제거 후 flex 추가하여 중앙 정렬
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeModal() { 
+            const modal = document.getElementById('tournament-modal');
+            modal.classList.add('hidden'); 
+            modal.classList.remove('flex'); // 다시 숨김
+            document.body.style.overflow = ''; 
+        }
+
         function switchTab(tabName) {
             document.getElementById('tab-content-main').classList.add('hidden-tab'); document.getElementById('tab-content-outline').classList.add('hidden-tab');
             document.getElementById('tab-content-' + tabName).classList.remove('hidden-tab');
             document.getElementById('tab-btn-main').className = document.getElementById('tab-btn-outline').className = "py-3 border-b-2 border-transparent text-muted hover:text-primary transition-colors text-sm";
             document.getElementById('tab-btn-' + tabName).className = "py-3 border-b-2 border-brand-end text-brand-end font-bold text-sm transition-colors";
         }
-        // 댓글 등록 (간단 구현)
+
         function addComment() {
             const input = document.getElementById('commentInput'); const text = input.value.trim(); if(!text) return;
             document.getElementById('comment-list').insertAdjacentHTML('afterbegin', `<div class="flex gap-3 animate-fade-in"><img src="https://i.pravatar.cc/150?u=myprofile" class="w-8 h-8 rounded-full border border-border"><div><div class="flex items-center gap-2 mb-0.5"><span class="font-bold text-sm">형님 (Admin)</span><span class="text-xs text-brand-end">방금 전</span></div><p class="text-sm text-primary">${text}</p></div></div>`);
