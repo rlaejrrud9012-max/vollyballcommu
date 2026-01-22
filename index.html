@@ -228,27 +228,24 @@
         }
         function getYoutubeID(url) { const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/; const match = url.match(regExp); return (match && match[2].length === 11) ? match[2] : null; }
 
-        // [핵심] 피드 데이터 & 로직
-        // likeStatus: 0=안누름, 1=누름
+        // 피드 데이터
         let posts = [
             { id: 1, author: "SpikeMaster", authorImg: "https://i.pravatar.cc/150?u=33", time: "2시간 전", category: "경기 예상", content: "이번 주말 라이벌 매치 승자 예측해봅니다.", type: "poll", poll: { option1: "대한항공", option2: "현대캐피탈", vote1: 65, vote2: 35 }, likes: 42, comments: 28, likeStatus: 0 },
             { id: 2, author: "CoachKim", authorImg: "https://i.pravatar.cc/150?u=88", time: "5시간 전", category: "훈련 팁", content: "스파이크 스텝 기초 강의", type: "youtube", youtube: "https://www.youtube.com/embed/dQw4w9WgXcQ?controls=0", likes: 89, comments: 12, likeStatus: 0 },
             { id: 3, author: "VolleyLife", authorImg: "https://i.pravatar.cc/150?u=12", time: "1일 전", category: "장비 리뷰", content: "새로 산 배구화 실물 깡패네요.", type: "image", likes: 152, comments: 42, likeStatus: 0 }
         ];
 
-        // 탭 상태 ('all' or 'popular')
         let currentTab = 'all';
 
         function renderFeed() {
             const container = document.getElementById('feed-container'); 
             container.innerHTML = ''; 
             
-            // 탭에 따른 정렬 로직 (복사본을 만들어서 정렬)
             let displayPosts = [...posts];
             if(currentTab === 'popular') {
                 displayPosts.sort((a, b) => b.likes - a.likes);
             } else {
-                displayPosts.sort((a, b) => b.id - a.id); // 최신순
+                displayPosts.sort((a, b) => b.id - a.id);
             }
 
             displayPosts.forEach(post => {
@@ -259,11 +256,7 @@
                 
                 const isNew = (post.time === "방금 전");
                 const badge = isNew ? `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-brand-end text-white ml-2 animate-pulse">NEW</span>` : '';
-                
-                // [좋아요 로직] 상태에 따라 아이콘/색상 변경
                 const heartClass = post.likeStatus ? 'fill-red-500 text-red-500 animate-like-bounce' : 'text-muted hover:text-red-500';
-                
-                // 더보기 메뉴 ID
                 const menuId = `menu-${post.id}`;
 
                 container.innerHTML += `
@@ -279,8 +272,8 @@
                         <div class="relative">
                             <button onclick="toggleMoreMenu('${menuId}')" class="text-muted hover:text-primary p-1"><i data-lucide="more-horizontal" class="w-5 h-5"></i></button>
                             <div id="${menuId}" class="dropdown-menu absolute right-0 top-8 w-32 bg-surface border border-border rounded-xl shadow-xl overflow-hidden z-10">
-                                <button onclick="alert('신고되었습니다.')" class="w-full text-left px-4 py-2.5 text-xs hover:bg-background text-red-500 font-medium">신고하기</button>
-                                <button onclick="alert('관심없음 설정됨.')" class="w-full text-left px-4 py-2.5 text-xs hover:bg-background text-primary">관심없음</button>
+                                <button onclick="handleMenuAction('report', '${menuId}')" class="w-full text-left px-4 py-2.5 text-xs hover:bg-background text-red-500 font-medium">신고하기</button>
+                                <button onclick="handleMenuAction('ignore', '${menuId}')" class="w-full text-left px-4 py-2.5 text-xs hover:bg-background text-primary">관심없음</button>
                             </div>
                         </div>
                     </div>
@@ -299,29 +292,31 @@
             lucide.createIcons();
         }
 
-        // [좋아요 토글 함수]
+        // [추가된 로직: 메뉴 액션 처리]
+        function handleMenuAction(action, menuId) {
+            const menu = document.getElementById(menuId);
+            if(menu) menu.classList.remove('show'); // 1. 메뉴 닫기
+            
+            // 2. 액션 수행 (약간의 딜레이를 주면 더 자연스러움)
+            setTimeout(() => {
+                if(action === 'report') alert('신고되었습니다.');
+                if(action === 'ignore') alert('관심없음 설정됨.');
+            }, 100);
+        }
+
         function toggleLike(id) {
             const post = posts.find(p => p.id === id);
             if(post) {
-                if(post.likeStatus === 0) {
-                    post.likeStatus = 1;
-                    post.likes++;
-                } else {
-                    post.likeStatus = 0;
-                    post.likes--;
-                }
+                if(post.likeStatus === 0) { post.likeStatus = 1; post.likes++; } 
+                else { post.likeStatus = 0; post.likes--; }
                 renderFeed();
             }
         }
 
-        // [탭 전환 함수]
         function switchFeedTab(tabName) {
             currentTab = tabName;
-            
-            // UI 업데이트
             const btnAll = document.getElementById('tab-all');
             const btnPopular = document.getElementById('tab-popular');
-            
             if(tabName === 'all') {
                 btnAll.className = "pb-3 border-b-2 border-brand-end text-brand-end font-bold text-sm transition-colors";
                 btnPopular.className = "pb-3 border-b-2 border-transparent text-muted hover:text-primary text-sm transition-colors";
@@ -332,17 +327,12 @@
             renderFeed();
         }
 
-        // [더보기 메뉴 토글]
         function toggleMoreMenu(id) {
             const menu = document.getElementById(id);
-            // 다른 열린 메뉴들 닫기
-            document.querySelectorAll('.dropdown-menu').forEach(el => {
-                if(el.id !== id) el.classList.remove('show');
-            });
+            document.querySelectorAll('.dropdown-menu').forEach(el => { if(el.id !== id) el.classList.remove('show'); });
             menu.classList.toggle('show');
         }
 
-        // 화면 클릭 시 메뉴 닫기
         window.onclick = function(event) {
             if (!event.target.closest('.relative')) {
                 document.querySelectorAll('.dropdown-menu').forEach(el => el.classList.remove('show'));
@@ -358,7 +348,6 @@
             const newPost = { id: Date.now(), author: "형님 (Admin)", authorImg: "https://i.pravatar.cc/150?u=myprofile", time: "방금 전", category: "자유게시판", content: content, type: type, likes: 0, comments: 0, likeStatus: 0 };
             if (type === 'youtube') newPost.youtube = `https://www.youtube.com/embed/${videoID}`; if (type === 'poll') newPost.poll = pollData;
             posts.unshift(newPost); 
-            // 탭을 전체로 돌리고 렌더링
             switchFeedTab('all'); 
             input.value = ''; youtubeInput.value = ''; pollOpt1.value = ''; pollOpt2.value = ''; document.getElementById('youtubeInputArea').classList.add('hidden'); document.getElementById('pollInputArea').classList.add('hidden');
         }
