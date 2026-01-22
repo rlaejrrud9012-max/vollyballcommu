@@ -65,7 +65,7 @@
                 <i data-lucide="trophy" class="w-5 h-5 min-w-[20px]"></i>
                 <span class="menu-text whitespace-nowrap">대회소식 (Tournaments)</span>
             </a>
-            <a href="#" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-secondary hover:text-primary hover:bg-surface transition-colors">
+            <a href="teams.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-secondary hover:text-primary hover:bg-surface transition-colors">
                 <i data-lucide="search" class="w-5 h-5 min-w-[20px]"></i>
                 <span class="menu-text whitespace-nowrap">팀 찾기 (Find Team)</span>
             </a>
@@ -186,6 +186,8 @@
 
     <script>
         lucide.createIcons();
+        // 사이드바 토글 함수 추가 (이 파일도 필요함)
+        function toggleSidebar() { document.getElementById('left-sidebar').classList.toggle('collapsed'); }
         function openModal() { const modal = document.getElementById('tournament-modal'); modal.classList.remove('hidden'); modal.classList.add('flex'); document.body.style.overflow = 'hidden'; }
         function closeModal() { const modal = document.getElementById('tournament-modal'); modal.classList.add('hidden'); modal.classList.remove('flex'); document.body.style.overflow = ''; }
         function openApplyModal() { const modal = document.getElementById('apply-info-modal'); modal.classList.remove('hidden'); modal.classList.add('flex'); }
