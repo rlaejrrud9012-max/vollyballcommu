@@ -15,6 +15,14 @@
                 extend: {
                     fontFamily: { sans: ['Pretendard', 'Inter', 'sans-serif'] },
                     colors: { background: '#09090B', surface: '#18181B', surface_hover: '#27272A', primary: '#FAFAFA', secondary: '#A1A1AA', muted: '#71717A', border: '#27272A', brand: { start: '#FF7A6E', end: '#00AEEF' } }
+                },
+                animation: {
+                    'fade-in-up': 'fadeInUp 0.5s ease-out forwards',
+                    'slide-down': 'slideDown 0.2s ease-out forwards'
+                },
+                keyframes: {
+                    fadeInUp: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                    slideDown: { '0%': { opacity: '0', transform: 'translateY(-10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
                 }
             }
         }
@@ -33,8 +41,9 @@
         .collapsed .sidebar-header { flex-direction: column; gap: 1rem; justify-content: center; padding-top: 1.5rem; padding-bottom: 1rem; }
         .collapsed .toggle-btn { position: static; margin-top: 0; transform: none; }
 
-        /* Custom Search Select */
-        .search-select { appearance: none; background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2371717A' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e"); background-position: right 0.5rem center; background-repeat: no-repeat; background-size: 1.5em 1.5em; }
+        /* 커스텀 드롭다운 스타일 */
+        .dropdown-menu { display: none; }
+        .dropdown-menu.show { display: block; animation: slideDown 0.2s ease-out; }
     </style>
 </head>
 <body class="h-screen w-full flex text-sm">
@@ -92,68 +101,116 @@
             <div class="md:hidden"><i data-lucide="menu" class="w-6 h-6"></i></div>
         </header>
 
-        <div class="p-0 pb-20">
+        <div class="p-0 pb-20 min-h-full flex flex-col">
             
-            <div class="relative w-full h-[320px] bg-zinc-900 border-b border-border flex flex-col items-center justify-center p-6">
-                <div class="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/8/86/South_Korea_location_map.svg')] bg-cover bg-center opacity-10 grayscale pointer-events-none"></div>
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-background"></div>
-
-                <div class="relative z-10 w-full max-w-3xl text-center space-y-6">
-                    <h2 class="text-3xl font-bold text-white tracking-tight">어디서 배구를 즐기고 싶으신가요?</h2>
+            <div id="search-hero" class="relative w-full h-[80vh] flex flex-col items-center justify-center p-6 transition-all duration-700 ease-in-out">
+                
+                <div class="absolute inset-0 bg-[url('https://upload.wikimedia.org/wikipedia/commons/8/86/South_Korea_location_map.svg')] bg-cover bg-center opacity-5 grayscale pointer-events-none"></div>
+                
+                <div class="relative z-10 w-full max-w-3xl text-center space-y-8 -mt-20">
+                    <h2 class="text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight">
+                        어디서 배구를<br><span class="text-brand-end">즐기고 싶으신가요?</span>
+                    </h2>
                     
-                    <div class="bg-surface border border-border rounded-full p-2 flex items-center shadow-2xl shadow-black/50">
+                    <div class="bg-surface border border-border rounded-full p-2 flex items-center shadow-2xl shadow-black/50 text-left">
                         
-                        <div class="flex-1 border-r border-border px-4 relative group">
+                        <div class="flex-1 border-r border-border px-6 relative group cursor-pointer" onclick="toggleDropdown('drop-sido')">
                             <label class="block text-[10px] font-bold text-brand-end mb-0.5 ml-1">시/도</label>
-                            <select class="search-select w-full bg-transparent text-sm text-primary font-medium focus:outline-none cursor-pointer">
-                                <option>경기도</option>
-                                <option>서울특별시</option>
-                                <option>인천광역시</option>
-                            </select>
+                            <div id="text-sido" class="text-sm text-primary font-bold">지역 선택</div>
+                            
+                            <div id="drop-sido" class="dropdown-menu absolute top-14 left-0 w-full bg-surface border border-border rounded-xl shadow-xl overflow-hidden z-50">
+                                <div class="p-2 space-y-1">
+                                    <div class="px-3 py-2 rounded-lg hover:bg-surface_hover text-sm cursor-pointer" onclick="selectItem('sido', '서울특별시')">서울특별시</div>
+                                    <div class="px-3 py-2 rounded-lg hover:bg-surface_hover text-sm cursor-pointer" onclick="selectItem('sido', '경기도')">경기도</div>
+                                    <div class="px-3 py-2 rounded-lg hover:bg-surface_hover text-sm cursor-pointer" onclick="selectItem('sido', '인천광역시')">인천광역시</div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="flex-1 border-r border-border px-4 relative group">
+                        <div class="flex-1 border-r border-border px-6 relative group cursor-pointer" onclick="toggleDropdown('drop-sigungu')">
                             <label class="block text-[10px] font-bold text-muted group-hover:text-primary mb-0.5 ml-1 transition-colors">시/군/구</label>
-                            <select class="search-select w-full bg-transparent text-sm text-primary font-medium focus:outline-none cursor-pointer">
-                                <option>광명시</option>
-                                <option>부천시</option>
-                                <option>안양시</option>
-                            </select>
+                            <div id="text-sigungu" class="text-sm text-muted font-medium">전체</div>
+                            
+                            <div id="drop-sigungu" class="dropdown-menu absolute top-14 left-0 w-full bg-surface border border-border rounded-xl shadow-xl overflow-hidden z-50">
+                                <div class="p-2 space-y-1">
+                                    <div class="px-3 py-2 rounded-lg hover:bg-surface_hover text-sm cursor-pointer" onclick="selectItem('sigungu', '광명시')">광명시</div>
+                                    <div class="px-3 py-2 rounded-lg hover:bg-surface_hover text-sm cursor-pointer" onclick="selectItem('sigungu', '안양시')">안양시</div>
+                                    <div class="px-3 py-2 rounded-lg hover:bg-surface_hover text-sm cursor-pointer" onclick="selectItem('sigungu', '부천시')">부천시</div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="flex-1 px-4 relative group">
+                        <div class="flex-1 px-6 relative group cursor-pointer" onclick="toggleDropdown('drop-dong')">
                             <label class="block text-[10px] font-bold text-muted group-hover:text-primary mb-0.5 ml-1 transition-colors">읍/면/동</label>
-                            <select class="search-select w-full bg-transparent text-sm text-primary font-medium focus:outline-none cursor-pointer">
-                                <option>철산동</option>
-                                <option>하안동</option>
-                                <option>소하동</option>
-                            </select>
+                            <div id="text-dong" class="text-sm text-muted font-medium">전체</div>
+
+                            <div id="drop-dong" class="dropdown-menu absolute top-14 left-0 w-full bg-surface border border-border rounded-xl shadow-xl overflow-hidden z-50">
+                                <div class="p-2 space-y-1">
+                                    <div class="px-3 py-2 rounded-lg hover:bg-surface_hover text-sm cursor-pointer" onclick="selectItem('dong', '철산동')">철산동</div>
+                                    <div class="px-3 py-2 rounded-lg hover:bg-surface_hover text-sm cursor-pointer" onclick="selectItem('dong', '하안동')">하안동</div>
+                                    <div class="px-3 py-2 rounded-lg hover:bg-surface_hover text-sm cursor-pointer" onclick="selectItem('dong', '소하동')">소하동</div>
+                                </div>
+                            </div>
                         </div>
 
-                        <button class="w-12 h-12 rounded-full bg-gradient-to-br from-brand-start to-brand-end flex items-center justify-center text-white hover:opacity-90 transition-opacity shadow-lg">
-                            <i data-lucide="search" class="w-5 h-5"></i>
+                        <button onclick="handleSearch()" class="w-14 h-14 rounded-full bg-gradient-to-br from-brand-start to-brand-end flex items-center justify-center text-white hover:opacity-90 transition-transform active:scale-95 shadow-lg">
+                            <i data-lucide="search" class="w-6 h-6"></i>
                         </button>
-                    </div>
-
-                    <div class="flex justify-center gap-2 text-xs">
-                        <span class="text-muted">추천 검색:</span>
-                        <button class="text-secondary hover:text-brand-end hover:underline">#내_주변_3km</button>
-                        <button class="text-secondary hover:text-brand-end hover:underline">#주말_오전</button>
-                        <button class="text-secondary hover:text-brand-end hover:underline">#초심자_환영</button>
                     </div>
                 </div>
             </div>
 
-            <div class="max-w-5xl mx-auto p-6 -mt-10 relative z-20">
-                <div class="mb-10">
-                    <div class="flex justify-between items-end mb-4">
-                        <h2 class="text-lg font-bold flex items-center gap-2 text-white">
-                            <i data-lucide="sparkles" class="w-5 h-5 text-brand-start"></i> AI 추천
+            <div id="search-results" class="hidden opacity-0 transition-opacity duration-500 max-w-6xl mx-auto p-6 w-full -mt-20 relative z-20">
+                
+                <div class="mb-16 animate-fade-in-up">
+                    <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                        <i data-lucide="map-pin" class="w-6 h-6 text-brand-end"></i> 
+                        <span id="result-title">경기도 광명시 철산동</span> 검색 결과 (3)
+                    </h2>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-5 rounded-2xl bg-surface border border-border hover:border-brand-end/50 transition-colors group">
+                            <div class="flex items-center gap-5">
+                                <img src="https://picsum.photos/seed/volleyball1/100/100" class="w-20 h-20 rounded-xl object-cover border border-border">
+                                <div>
+                                    <h3 class="font-bold text-lg text-primary mb-1 group-hover:text-brand-end transition-colors">광명 스파이커즈</h3>
+                                    <div class="flex items-center gap-4 text-sm text-muted">
+                                        <span class="flex items-center gap-1.5"><i data-lucide="users" class="w-4 h-4"></i> 24명</span>
+                                        <span class="w-1 h-1 rounded-full bg-zinc-700"></span>
+                                        <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-4 h-4"></i> 일 11:00 ~ 14:00</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="px-5 py-2.5 rounded-xl bg-surface_hover border border-border text-sm font-bold text-primary hover:bg-zinc-700 transition-colors">상세보기</button>
+                        </div>
+
+                        <div class="flex items-center justify-between p-5 rounded-2xl bg-surface border border-border hover:border-brand-end/50 transition-colors group">
+                            <div class="flex items-center gap-5">
+                                <img src="https://picsum.photos/seed/volleyball3/100/100" class="w-20 h-20 rounded-xl object-cover border border-border">
+                                <div>
+                                    <h3 class="font-bold text-lg text-primary mb-1 group-hover:text-brand-end transition-colors">철산 윙스</h3>
+                                    <div class="flex items-center gap-4 text-sm text-muted">
+                                        <span class="flex items-center gap-1.5"><i data-lucide="users" class="w-4 h-4"></i> 15명</span>
+                                        <span class="w-1 h-1 rounded-full bg-zinc-700"></span>
+                                        <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-4 h-4"></i> 토 18:00 ~ 21:00</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="px-5 py-2.5 rounded-xl bg-surface_hover border border-border text-sm font-bold text-primary hover:bg-zinc-700 transition-colors">상세보기</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-10 animate-fade-in-up" style="animation-delay: 0.2s;">
+                    <div class="flex justify-between items-end mb-6">
+                        <h2 class="text-xl font-bold flex items-center gap-2 text-white">
+                            <i data-lucide="sparkles" class="w-6 h-6 text-brand-start"></i> AI 추천 인근 팀
                         </h2>
+                        <span class="text-sm text-muted">형님의 활동 패턴과 유사한 팀입니다.</span>
                     </div>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <div class="rounded-2xl bg-gradient-to-br from-surface to-surface_hover border border-brand-start/30 p-5 relative group hover:border-brand-start transition-all shadow-lg">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="rounded-2xl bg-gradient-to-br from-surface to-surface_hover border border-brand-start/30 p-6 relative group hover:border-brand-start transition-all shadow-lg">
                             <div class="absolute -top-3 -right-3 w-10 h-10 bg-brand-start rounded-full flex items-center justify-center text-white shadow-lg shadow-brand-start/40 z-10">
                                 <i data-lucide="thumbs-up" class="w-5 h-5"></i>
                             </div>
@@ -164,14 +221,14 @@
                                     <p class="text-xs text-brand-start font-medium">매치 적합도 98%</p>
                                 </div>
                             </div>
-                            <div class="space-y-2 text-sm text-secondary mb-4">
+                            <div class="space-y-2 text-sm text-secondary mb-5">
                                 <div class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-muted"></i> 서울 구로구 (3km)</div>
                                 <div class="flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4 text-muted"></i> 매주 토요일 14:00</div>
                             </div>
-                            <button class="w-full py-2.5 rounded-xl bg-primary text-background font-bold text-sm hover:opacity-90 transition-colors">팀 구경하기</button>
+                            <button class="w-full py-3 rounded-xl bg-primary text-background font-bold text-sm hover:opacity-90 transition-colors">팀 구경하기</button>
                         </div>
 
-                        <div class="rounded-2xl bg-surface border border-border p-5 relative group hover:border-brand-end transition-all">
+                        <div class="rounded-2xl bg-surface border border-border p-6 relative group hover:border-brand-end transition-all">
                             <div class="flex items-center gap-4 mb-4">
                                 <img src="https://picsum.photos/seed/volleyball6/100/100" class="w-14 h-14 rounded-xl border border-white/10">
                                 <div>
@@ -179,52 +236,15 @@
                                     <p class="text-xs text-brand-end font-medium">활동 시간 일치</p>
                                 </div>
                             </div>
-                            <div class="space-y-2 text-sm text-secondary mb-4">
+                            <div class="space-y-2 text-sm text-secondary mb-5">
                                 <div class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-muted"></i> 서울 양천구 (5km)</div>
                                 <div class="flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4 text-muted"></i> 매주 일요일 10:00</div>
                             </div>
-                            <button class="w-full py-2.5 rounded-xl bg-surface_hover border border-border text-primary font-bold text-sm hover:bg-zinc-700 transition-colors">팀 구경하기</button>
+                            <button class="w-full py-3 rounded-xl bg-surface_hover border border-border text-primary font-bold text-sm hover:bg-zinc-700 transition-colors">팀 구경하기</button>
                         </div>
                     </div>
                 </div>
 
-                <div>
-                    <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
-                        <i data-lucide="map-pin" class="w-5 h-5 text-brand-end"></i> 경기 광명시 철산동 (12)
-                    </h2>
-                    
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between p-4 rounded-2xl bg-surface border border-border hover:border-primary/30 transition-colors group">
-                            <div class="flex items-center gap-4">
-                                <img src="https://picsum.photos/seed/volleyball1/100/100" class="w-16 h-16 rounded-xl object-cover">
-                                <div>
-                                    <h3 class="font-bold text-base text-primary mb-1 group-hover:text-brand-end transition-colors">광명 스파이커즈</h3>
-                                    <div class="flex items-center gap-3 text-xs text-muted">
-                                        <span class="flex items-center gap-1"><i data-lucide="users" class="w-3 h-3"></i> 24명</span>
-                                        <span class="w-1 h-1 rounded-full bg-zinc-700"></span>
-                                        <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> 일 11:00 ~ 14:00</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="px-4 py-2 rounded-lg border border-border text-xs font-bold text-secondary hover:text-primary hover:bg-surface_hover transition-colors">상세보기</button>
-                        </div>
-
-                        <div class="flex items-center justify-between p-4 rounded-2xl bg-surface border border-border hover:border-primary/30 transition-colors group">
-                            <div class="flex items-center gap-4">
-                                <img src="https://picsum.photos/seed/volleyball3/100/100" class="w-16 h-16 rounded-xl object-cover">
-                                <div>
-                                    <h3 class="font-bold text-base text-primary mb-1 group-hover:text-brand-end transition-colors">철산 윙스</h3>
-                                    <div class="flex items-center gap-3 text-xs text-muted">
-                                        <span class="flex items-center gap-1"><i data-lucide="users" class="w-3 h-3"></i> 15명</span>
-                                        <span class="w-1 h-1 rounded-full bg-zinc-700"></span>
-                                        <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> 토 18:00 ~ 21:00</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="px-4 py-2 rounded-lg border border-border text-xs font-bold text-secondary hover:text-primary hover:bg-surface_hover transition-colors">상세보기</button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </main>
@@ -264,7 +284,6 @@
                         <span class="text-xs text-muted">강서배구왕</span>
                     </div>
                 </div>
-
                 <div class="p-4 rounded-xl bg-surface border border-border hover:border-brand-start/50 transition-colors cursor-pointer group">
                     <div class="flex justify-between items-start mb-2">
                         <span class="px-1.5 py-0.5 rounded bg-brand-start/20 text-brand-start text-[10px] font-bold">내일 14:00</span>
@@ -280,12 +299,60 @@
             </div>
             <button class="w-full mt-4 py-2 rounded-lg border border-border text-xs text-muted hover:bg-surface transition-colors">더보기</button>
         </div>
-
     </aside>
 
     <script>
         function toggleSidebar() { document.getElementById('left-sidebar').classList.toggle('collapsed'); }
         lucide.createIcons();
+
+        // [CUSTOM DROPDOWN LOGIC]
+        function toggleDropdown(id) {
+            // 다른 드롭다운 닫기
+            document.querySelectorAll('.dropdown-menu').forEach(el => {
+                if(el.id !== id) el.classList.remove('show');
+            });
+            // 현재 드롭다운 토글
+            document.getElementById(id).classList.toggle('show');
+        }
+
+        function selectItem(type, value) {
+            // 텍스트 업데이트
+            document.getElementById('text-' + type).innerText = value;
+            document.getElementById('text-' + type).classList.remove('text-muted');
+            document.getElementById('text-' + type).classList.add('text-primary', 'font-bold');
+            
+            // 드롭다운 닫기
+            document.getElementById('drop-' + type).classList.remove('show');
+        }
+
+        // 화면 다른 곳 클릭 시 드롭다운 닫기
+        window.onclick = function(event) {
+            if (!event.target.closest('.relative.group')) {
+                document.querySelectorAll('.dropdown-menu').forEach(el => el.classList.remove('show'));
+            }
+        }
+
+        // [SEARCH LOGIC]
+        function handleSearch() {
+            // 1. 헤더 높이 줄이기 (Optional, but looks nice)
+            const hero = document.getElementById('search-hero');
+            hero.style.height = '40vh'; // 높이 축소
+            
+            // 2. 결과 보이기
+            const results = document.getElementById('search-results');
+            results.classList.remove('hidden');
+            
+            // 약간의 딜레이 후 투명도 조절로 부드럽게 등장
+            setTimeout(() => {
+                results.classList.remove('opacity-0');
+            }, 100);
+
+            // 3. 지역명 타이틀 업데이트
+            const dong = document.getElementById('text-dong').innerText;
+            const sigungu = document.getElementById('text-sigungu').innerText;
+            const finalLocation = (dong !== '전체') ? dong : (sigungu !== '전체' ? sigungu : '선택 지역');
+            document.getElementById('result-title').innerText = `경기 광명시 ${finalLocation}`;
+        }
     </script>
 </body>
 </html>
