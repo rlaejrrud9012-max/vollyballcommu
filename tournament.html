@@ -14,7 +14,12 @@
             theme: {
                 extend: {
                     fontFamily: { sans: ['Pretendard', 'Inter', 'sans-serif'] },
-                    colors: { background: '#09090B', surface: '#18181B', surface_hover: '#27272A', primary: '#FAFAFA', secondary: '#A1A1AA', muted: '#71717A', border: '#27272A', brand: { start: '#FF7A6E', end: '#00AEEF' } }
+                    colors: { background: '#09090B', surface: '#18181B', surface_hover: '#27272A', primary: '#FAFAFA', secondary: '#A1A1AA', muted: '#71717A', border: '#27272A', brand: { start: '#FF7A6E', end: '#00AEEF' } },
+                    animation: { 'fade-in-up': 'fadeInUp 0.3s ease-out forwards', 'toast-slide': 'toastSlide 0.3s ease-out forwards' },
+                    keyframes: { 
+                        fadeInUp: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        toastSlide: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
+                    }
                 }
             }
         }
@@ -37,7 +42,7 @@
 
         .hidden-tab { display: none; }
         .stable-scroll { scrollbar-gutter: stable; }
-        #apply-info-modal { z-index: 60; } 
+        #apply-info-modal, #filter-modal { z-index: 60; } 
     </style>
 </head>
 <body class="h-screen w-full flex text-sm">
@@ -96,11 +101,19 @@
     <main class="flex-1 h-full overflow-y-auto bg-background relative">
         <header class="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border px-6 h-[72px] flex justify-between items-center gap-4">
             <h1 class="text-xl font-bold whitespace-nowrap">대회 공지</h1>
-            <button class="px-4 py-2 rounded-lg bg-surface border border-border hover:bg-surface_hover text-sm font-medium transition-colors">필터 설정</button>
+            <button onclick="openFilterModal()" class="px-4 py-2 rounded-lg bg-surface border border-border hover:bg-surface_hover text-sm font-medium transition-colors flex items-center gap-2">
+                <i data-lucide="sliders-horizontal" class="w-4 h-4"></i> 필터 설정
+            </button>
         </header>
 
         <div class="p-8 pb-20">
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div id="active-filters" class="flex gap-2 mb-6 hidden">
+                <span class="px-3 py-1 rounded-full bg-brand-end/10 text-brand-end text-xs font-bold border border-brand-end/20 flex items-center gap-1">
+                    서울/경기 <button onclick="clearFilter()" class="hover:text-white"><i data-lucide="x" class="w-3 h-3"></i></button>
+                </span>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="tournament-grid">
                 <button onclick="openModal()" class="group relative rounded-xl bg-surface border border-border overflow-hidden hover:border-brand-end/50 transition-all hover:-translate-y-1 text-left w-full">
                     <div class="h-36 w-full bg-zinc-800 relative">
                         <img src="https://images.unsplash.com/photo-1592656094267-764a45160876?auto=format&fit=crop&q=80&w=800" referrerpolicy="no-referrer" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
@@ -125,9 +138,9 @@
         <div class="relative group mb-8"><div class="absolute inset-y-0 left-3 flex items-center pointer-events-none"><i data-lucide="search" class="w-4 h-4 text-muted"></i></div><input type="text" placeholder="대회 검색..." class="w-full bg-surface border border-border text-primary text-sm rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:border-brand-end"></div>
         <div class="mb-6 flex items-center justify-between">
             <h3 class="text-xs font-bold text-muted uppercase tracking-wider">2026 시즌 팀 랭킹</h3>
-            <button class="text-xs text-brand-end hover:underline">전체보기</button>
+            <button onclick="expandRanking()" class="text-xs text-brand-end hover:underline">전체보기</button>
         </div>
-        <div class="space-y-3">
+        <div class="space-y-3" id="ranking-list">
             <div class="flex items-center gap-4 p-4 rounded-xl bg-surface border border-border/50 hover:border-brand-end/30 transition-colors"><span class="text-lg font-bold text-brand-end w-4 text-center">1</span><img src="https://i.pravatar.cc/150?u=33" class="w-10 h-10 rounded-full bg-zinc-800 border border-border"><div class="flex-1 min-w-0"><h4 class="font-bold text-sm text-primary truncate">광명 스파이커즈</h4><p class="text-xs text-muted">1,250 pts</p></div><div class="flex items-center gap-2 text-xs font-bold"><span class="flex items-center gap-0.5 text-yellow-500"><i data-lucide="award" class="w-3 h-3"></i> 3</span><span class="flex items-center gap-0.5 text-gray-400"><i data-lucide="award" class="w-3 h-3"></i> 1</span></div></div>
             <div class="flex items-center gap-4 p-4 rounded-xl bg-surface border border-border/50 hover:border-brand-end/30 transition-colors"><span class="text-lg font-bold text-primary w-4 text-center">2</span><img src="https://i.pravatar.cc/150?u=12" class="w-10 h-10 rounded-full bg-zinc-800 border border-border"><div class="flex-1 min-w-0"><h4 class="font-bold text-sm text-primary truncate">하이큐 클럽</h4><p class="text-xs text-muted">980 pts</p></div><div class="flex items-center gap-2 text-xs font-bold"><span class="flex items-center gap-0.5 text-yellow-500"><i data-lucide="award" class="w-3 h-3"></i> 1</span><span class="flex items-center gap-0.5 text-gray-400"><i data-lucide="award" class="w-3 h-3"></i> 4</span></div></div>
             <div class="flex items-center gap-4 p-4 rounded-xl bg-surface border border-border/50 hover:border-brand-end/30 transition-colors"><span class="text-lg font-bold text-primary w-4 text-center">3</span><img src="https://i.pravatar.cc/150?u=88" class="w-10 h-10 rounded-full bg-zinc-800 border border-border"><div class="flex-1 min-w-0"><h4 class="font-bold text-sm text-primary truncate">서울 배구사랑</h4><p class="text-xs text-muted">850 pts</p></div><div class="flex items-center gap-2 text-xs font-bold"><span class="flex items-center gap-0.5 text-yellow-500"><i data-lucide="award" class="w-3 h-3"></i> 1</span><span class="flex items-center gap-0.5 text-orange-600"><i data-lucide="award" class="w-3 h-3"></i> 5</span></div></div>
@@ -156,7 +169,13 @@
                 </div>
                  <div class="p-5 grid grid-cols-1 lg:grid-cols-3 gap-4 border-b border-border bg-surface/30 shrink-0">
                     <div class="p-3 rounded-xl bg-surface border border-border flex flex-col justify-center"><p class="text-xs text-muted mb-1 font-bold flex items-center gap-1.5"><i data-lucide="clock" class="w-3.5 h-3.5"></i> 참가접수 기간</p><p class="text-sm font-bold text-primary tracking-tight leading-snug">2026-01-01 09:00 <span class="text-muted font-normal text-xs">~</span><br>2026-01-31 18:00</p></div>
-                    <div class="p-3 rounded-xl bg-surface border border-border flex flex-col justify-center"><p class="text-xs text-muted mb-2 font-bold flex items-center gap-1.5"><i data-lucide="file-text" class="w-3.5 h-3.5"></i> 대회요강</p><button class="w-full py-1.5 rounded-lg bg-surface_hover border border-border hover:bg-zinc-700 transition-colors flex items-center justify-center gap-1.5 text-sm text-brand-end font-bold"><i data-lucide="download" class="w-4 h-4"></i> 다운로드</button></div>
+                    
+                    <div class="p-3 rounded-xl bg-surface border border-border flex flex-col justify-center">
+                        <p class="text-xs text-muted mb-2 font-bold flex items-center gap-1.5"><i data-lucide="file-text" class="w-3.5 h-3.5"></i> 대회요강</p>
+                        <button onclick="downloadFile()" class="w-full py-1.5 rounded-lg bg-surface_hover border border-border hover:bg-zinc-700 transition-colors flex items-center justify-center gap-1.5 text-sm text-brand-end font-bold active:scale-95">
+                            <i data-lucide="download" class="w-4 h-4"></i> 다운로드
+                        </button>
+                    </div>
                     <button onclick="openApplyModal()" class="w-full h-full min-h-[70px] rounded-xl bg-gradient-to-r from-brand-start to-brand-end text-white font-bold text-lg hover:opacity-90 transition-all shadow-lg shadow-brand-start/20 flex flex-col items-center justify-center"><span>참가 신청하기</span><span class="text-[10px] font-normal opacity-80 bg-black/20 px-2 py-0.5 rounded-full mt-0.5">접수 안내 확인</span></button>
                 </div>
                 <div class="px-8 border-b border-border sticky top-0 bg-background z-10 shrink-0"><div class="flex gap-8"><button id="tab-btn-main" onclick="switchTab('main')" class="py-4 border-b-2 border-brand-end text-brand-end font-bold text-base transition-colors">메인</button><button id="tab-btn-outline" onclick="switchTab('outline')" class="py-4 border-b-2 border-transparent text-muted hover:text-primary transition-colors text-base">대회요강</button></div></div>
@@ -169,7 +188,14 @@
                         <div class="space-y-8">
                             <div><h3 class="text-base font-bold mb-4 flex items-center gap-2"><i data-lucide="info" class="w-5 h-5 text-brand-end"></i> 대회 개요</h3><div class="text-base text-secondary leading-relaxed bg-surface p-6 rounded-xl border border-border"><p>제1회 제미나이배는 순수 아마추어 정신을 바탕으로 모두가 즐길 수 있는 축제의 장입니다.</p><ul class="list-disc list-inside mt-4 space-y-2 text-muted text-sm"><li><strong>주최/주관:</strong> 제미나이 스포츠</li><li><strong>사용구:</strong> 스타 그랜드 챔피언</li></ul></div></div>
                             <div><h3 class="text-base font-bold mb-4 flex items-center gap-2"><i data-lucide="trophy" class="w-5 h-5 text-yellow-500"></i> 대회 상금</h3><div class="grid grid-cols-1 md:grid-cols-3 gap-4"><div class="bg-surface p-5 rounded-xl border border-border text-center"><div class="w-10 h-10 mx-auto bg-yellow-500/20 text-yellow-500 rounded-full flex items-center justify-center mb-2"><i data-lucide="crown" class="w-5 h-5"></i></div><p class="font-bold text-lg text-primary">우승</p><p class="text-brand-end font-bold">100만원</p><p class="text-xs text-muted mt-1">+ 트로피</p></div><div class="bg-surface p-5 rounded-xl border border-border text-center"><div class="w-10 h-10 mx-auto bg-gray-400/20 text-gray-400 rounded-full flex items-center justify-center mb-2"><i data-lucide="medal" class="w-5 h-5"></i></div><p class="font-bold text-lg text-primary">준우승</p><p class="text-brand-end font-bold">50만원</p><p class="text-xs text-muted mt-1">+ 트로피</p></div><div class="bg-surface p-5 rounded-xl border border-border text-center"><div class="w-10 h-10 mx-auto bg-orange-700/20 text-orange-700 rounded-full flex items-center justify-center mb-2"><i data-lucide="medal" class="w-5 h-5"></i></div><p class="font-bold text-lg text-primary">3위</p><p class="text-brand-end font-bold">30만원</p><p class="text-xs text-muted mt-1">+ 상장</p></div></div></div>
-                            <div><h3 class="text-base font-bold mb-4 flex items-center gap-2"><i data-lucide="map-pin" class="w-5 h-5 text-brand-start"></i> 경기장</h3><div class="flex items-center gap-4 bg-surface p-6 rounded-xl border border-border justify-between"><div><h4 class="font-bold text-primary text-lg">광명시민체육관</h4><p class="text-sm text-muted mt-1">경기도 광명시 철산동 오리로 703</p></div><a href="https://www.google.com/maps/search/?api=1&query=광명시민체육관" target="_blank" class="px-4 py-2 rounded-lg bg-background border border-border text-brand-end hover:bg-surface transition-colors flex items-center gap-2 font-bold"><i data-lucide="map" class="w-5 h-5"></i> 지도 보기</a></div></div>
+                            
+                            <div>
+                                <h3 class="text-base font-bold mb-4 flex items-center gap-2"><i data-lucide="map-pin" class="w-5 h-5 text-brand-start"></i> 경기장</h3>
+                                <div class="flex items-center gap-4 bg-surface p-6 rounded-xl border border-border justify-between">
+                                    <div><h4 class="font-bold text-primary text-lg">광명시민체육관</h4><p class="text-sm text-muted mt-1">경기도 광명시 철산동 오리로 703</p></div>
+                                    <a href="https://www.google.com/maps/search/광명시민체육관" target="_blank" class="px-4 py-2 rounded-lg bg-background border border-border text-brand-end hover:bg-surface transition-colors flex items-center gap-2 font-bold"><i data-lucide="map" class="w-5 h-5"></i> 지도 보기</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -191,6 +217,44 @@
         </div>
     </div>
 
+    <div id="filter-modal" class="fixed inset-0 hidden items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeFilterModal()"></div>
+        <div class="bg-background w-full max-w-md rounded-2xl overflow-hidden relative z-60 shadow-2xl border border-border animate-fade-in-up">
+            <div class="p-5 border-b border-border flex justify-between items-center">
+                <h3 class="font-bold text-lg">필터 설정</h3>
+                <button onclick="closeFilterModal()" class="text-muted hover:text-primary"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="p-6 space-y-6">
+                <div>
+                    <label class="text-xs font-bold text-muted mb-3 block uppercase">지역</label>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="filter-chip px-3 py-1.5 rounded-lg border border-border text-sm text-secondary hover:border-brand-end hover:text-brand-end transition-colors selected bg-brand-end/10 border-brand-end text-brand-end">전체</button>
+                        <button class="filter-chip px-3 py-1.5 rounded-lg border border-border text-sm text-secondary hover:border-brand-end hover:text-brand-end transition-colors">서울</button>
+                        <button class="filter-chip px-3 py-1.5 rounded-lg border border-border text-sm text-secondary hover:border-brand-end hover:text-brand-end transition-colors">경기</button>
+                        <button class="filter-chip px-3 py-1.5 rounded-lg border border-border text-sm text-secondary hover:border-brand-end hover:text-brand-end transition-colors">인천</button>
+                    </div>
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-muted mb-3 block uppercase">상태</label>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="filter-chip px-3 py-1.5 rounded-lg border border-border text-sm text-secondary hover:border-brand-end hover:text-brand-end transition-colors selected bg-brand-end/10 border-brand-end text-brand-end">전체</button>
+                        <button class="filter-chip px-3 py-1.5 rounded-lg border border-border text-sm text-secondary hover:border-brand-end hover:text-brand-end transition-colors">접수중</button>
+                        <button class="filter-chip px-3 py-1.5 rounded-lg border border-border text-sm text-secondary hover:border-brand-end hover:text-brand-end transition-colors">마감임박</button>
+                    </div>
+                </div>
+            </div>
+            <div class="p-5 border-t border-border flex gap-3">
+                <button onclick="closeFilterModal()" class="flex-1 py-3 rounded-xl border border-border text-secondary font-bold hover:bg-surface transition-colors">초기화</button>
+                <button onclick="applyFilter()" class="flex-[2] py-3 rounded-xl bg-primary text-background font-bold hover:opacity-90 transition-colors">적용하기</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-surface border border-border text-primary px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 z-70 hidden opacity-0 transition-all">
+        <i data-lucide="check-circle" class="w-5 h-5 text-emerald-500"></i>
+        <span class="text-sm font-bold">대회요강 파일 다운로드 중...</span>
+    </div>
+
     <script>
         function toggleSidebar() { 
             const sidebar = document.getElementById('left-sidebar');
@@ -201,10 +265,46 @@
             lucide.createIcons(); 
         }
         lucide.createIcons();
+
+        // 팝업 로직들
         function openModal() { const modal = document.getElementById('tournament-modal'); modal.classList.remove('hidden'); modal.classList.add('flex'); document.body.style.overflow = 'hidden'; }
         function closeModal() { const modal = document.getElementById('tournament-modal'); modal.classList.add('hidden'); modal.classList.remove('flex'); document.body.style.overflow = ''; }
         function openApplyModal() { const modal = document.getElementById('apply-info-modal'); modal.classList.remove('hidden'); modal.classList.add('flex'); }
         function closeApplyModal() { const modal = document.getElementById('apply-info-modal'); modal.classList.add('hidden'); modal.classList.remove('flex'); }
+        
+        // [NEW] 필터 모달 로직
+        function openFilterModal() { const modal = document.getElementById('filter-modal'); modal.classList.remove('hidden'); modal.classList.add('flex'); }
+        function closeFilterModal() { const modal = document.getElementById('filter-modal'); modal.classList.add('hidden'); modal.classList.remove('flex'); }
+        function applyFilter() { 
+            closeFilterModal(); 
+            // 필터 적용된 척 UI 표시
+            document.getElementById('active-filters').classList.remove('hidden');
+        }
+        function clearFilter() {
+            document.getElementById('active-filters').classList.add('hidden');
+        }
+
+        // [NEW] 다운로드 토스트 로직
+        function downloadFile() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('hidden');
+            toast.classList.add('animate-toast-slide');
+            setTimeout(() => {
+                toast.classList.remove('animate-toast-slide');
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        // [NEW] 랭킹 확장 로직
+        function expandRanking() {
+            const list = document.getElementById('ranking-list');
+            // 가짜 데이터 추가
+            list.innerHTML += `
+            <div class="flex items-center gap-4 p-4 rounded-xl bg-surface border border-border/50 hover:border-brand-end/30 transition-colors animate-fade-in"><span class="text-lg font-bold text-muted w-4 text-center">4</span><img src="https://i.pravatar.cc/150?u=44" class="w-10 h-10 rounded-full bg-zinc-800 border border-border"><div class="flex-1 min-w-0"><h4 class="font-bold text-sm text-primary truncate">부천 블로킹</h4><p class="text-xs text-muted">720 pts</p></div></div>
+            <div class="flex items-center gap-4 p-4 rounded-xl bg-surface border border-border/50 hover:border-brand-end/30 transition-colors animate-fade-in"><span class="text-lg font-bold text-muted w-4 text-center">5</span><img src="https://i.pravatar.cc/150?u=55" class="w-10 h-10 rounded-full bg-zinc-800 border border-border"><div class="flex-1 min-w-0"><h4 class="font-bold text-sm text-primary truncate">안산 어택</h4><p class="text-xs text-muted">650 pts</p></div></div>
+            `;
+        }
+
         function switchTab(tabName) {
             document.getElementById('tab-content-main').classList.add('hidden-tab'); document.getElementById('tab-content-outline').classList.add('hidden-tab');
             document.getElementById('tab-content-' + tabName).classList.remove('hidden-tab');
@@ -216,6 +316,18 @@
             document.getElementById('comment-list').insertAdjacentHTML('afterbegin', `<div class="flex gap-4 animate-fade-in"><img src="https://i.pravatar.cc/150?u=myprofile" class="w-10 h-10 rounded-full border border-border"><div><div class="flex items-center gap-2 mb-1"><span class="font-bold text-base">형님 (Admin)</span><span class="text-xs text-brand-end">방금 전</span></div><p class="text-base text-primary">${text}</p></div></div>`);
             input.value = '';
         }
+        
+        // 칩 선택 로직 (시각적 효과만)
+        document.querySelectorAll('.filter-chip').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // 형제 요소들 선택 해제
+                this.parentNode.querySelectorAll('.filter-chip').forEach(s => {
+                    s.classList.remove('selected', 'bg-brand-end/10', 'border-brand-end', 'text-brand-end');
+                });
+                // 본인 선택
+                this.classList.add('selected', 'bg-brand-end/10', 'border-brand-end', 'text-brand-end');
+            });
+        });
     </script>
 </body>
 </html>
