@@ -87,7 +87,7 @@
             </a>
             <div class="pt-6 mt-2">
                 <p class="px-4 text-xs font-bold text-muted mb-3 uppercase menu-text">My Team</p>
-                <div onclick="openMyTeamModal()" class="team-card flex items-center gap-3 p-3 rounded-xl bg-surface border border-border hover:border-brand-end transition-colors group cursor-pointer">
+                <div onclick="openMyTeamIntro()" class="team-card flex items-center gap-3 p-3 rounded-xl bg-surface border border-border hover:border-brand-end transition-colors group cursor-pointer">
                     <div class="relative w-8 h-8 min-w-[32px]">
                         <img src="https://picsum.photos/seed/volleyball1/100/100" class="w-full h-full rounded-lg object-cover">
                         <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-brand-end rounded-full border-2 border-surface"></span>
@@ -107,7 +107,6 @@
                     <p class="text-xs text-muted whitespace-nowrap">@bigbrother</p>
                 </div>
             </button>
-            
             <div id="profile-menu" class="absolute bottom-full left-4 mb-2 w-56 bg-surface border border-border rounded-xl shadow-2xl overflow-hidden hidden animate-slide-up-fade origin-bottom-left z-50">
                 <div class="p-3 border-b border-border bg-background/50">
                     <p class="text-xs text-muted">Signed in as</p>
@@ -230,46 +229,73 @@
         </div>
     </div>
 
-    <div id="my-team-modal" class="fixed inset-0 hidden items-center justify-center p-4 z-50">
-        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeMyTeamModal()"></div>
+    <div id="my-team-intro-modal" class="fixed inset-0 hidden items-center justify-center p-4 z-50">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeMyTeamIntro()"></div>
+        <div class="bg-background w-full max-w-5xl h-[90vh] rounded-3xl overflow-hidden relative z-10 shadow-2xl border border-border flex flex-col animate-fade-in-up">
+            <div class="sticky top-0 z-20 bg-background/90 backdrop-blur-md border-b border-border px-6 py-4 flex justify-between items-center shrink-0">
+                <div class="flex items-center gap-3"><h2 class="text-lg font-bold truncate text-primary">서울 주말 배구</h2><span class="px-2 py-0.5 rounded-full bg-brand-end/10 text-brand-end text-[10px] font-bold border border-brand-end/20">승인 멤버</span></div>
+                <button onclick="closeMyTeamIntro()" class="p-2 rounded-full hover:bg-surface text-muted hover:text-primary transition-colors"><i data-lucide="x" class="w-6 h-6"></i></button>
+            </div>
+            
+            <div class="overflow-y-auto stable-scroll flex-1 p-0 bg-background">
+                <div class="relative h-64 md:h-80 bg-zinc-800 group">
+                    <img src="https://picsum.photos/seed/volleyball1/1200/400" class="w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 w-full p-6 md:p-8 flex items-end gap-6">
+                        <div class="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-zinc-900 border-4 border-background shadow-2xl overflow-hidden flex-shrink-0 -mb-4 relative z-10"><img src="https://picsum.photos/seed/volleyball1/200/200" class="w-full h-full object-cover"></div>
+                        <div class="mb-1 flex-1"><h1 class="text-3xl md:text-4xl font-bold text-white mb-2 shadow-sm">서울 주말 배구</h1><p class="text-sm text-zinc-300 flex items-center gap-2 font-medium"><i data-lucide="map-pin" class="w-4 h-4 text-brand-start"></i> 서울 강서구 · Since 2023</p></div>
+                    </div>
+                </div>
+
+                <div class="p-6 md:p-8 pt-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2 space-y-8">
+                        <section><h3 class="text-lg font-bold mb-4 flex items-center gap-2 text-primary">👋 팀 소개</h3><div class="prose prose-invert prose-sm max-w-none text-secondary leading-relaxed bg-surface/50 p-6 rounded-2xl border border-border"><p>안녕하세요! <strong>서울 주말 배구</strong>는 직장인을 위한 즐거운 배구 모임입니다.<br>매주 주말, 땀 흘리며 스트레스를 날려버리고 싶은 분들을 환영합니다.<br>실력보다 매너! 승패보다 팀워크!</p></div></section>
+                        <section><h3 class="text-lg font-bold mb-4 flex items-center gap-2 text-primary">⚡ 활동 정보</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div class="p-4 bg-surface rounded-xl border border-border flex items-start gap-4"><div class="p-2.5 rounded-lg bg-background border border-border text-brand-end"><i data-lucide="clock" class="w-5 h-5"></i></div><div><p class="text-xs text-muted font-bold mb-0.5">정기 운동</p><p class="text-sm font-bold text-primary">일요일 14:00 ~ 17:00</p></div></div><div class="p-4 bg-surface rounded-xl border border-border flex items-start gap-4"><div class="p-2.5 rounded-lg bg-background border border-border text-brand-start"><i data-lucide="map" class="w-5 h-5"></i></div><div><p class="text-xs text-muted font-bold mb-0.5">주요 체육관</p><p class="text-sm font-bold text-primary">강서구민체육센터</p></div></div></div></section>
+                        <section><h3 class="text-lg font-bold mb-4 flex items-center gap-2 text-primary">📸 활동 사진</h3><div class="grid grid-cols-3 gap-3"><div class="aspect-square rounded-xl bg-zinc-800 overflow-hidden"><img src="https://picsum.photos/seed/v1/300/300" class="w-full h-full object-cover"></div><div class="aspect-square rounded-xl bg-zinc-800 overflow-hidden"><img src="https://picsum.photos/seed/v2/300/300" class="w-full h-full object-cover"></div><div class="aspect-square rounded-xl bg-zinc-800 overflow-hidden relative"><img src="https://picsum.photos/seed/v3/300/300" class="w-full h-full object-cover"><div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-sm">+12</div></div></div></section>
+                    </div>
+                    <div class="lg:col-span-1">
+                        <div class="sticky top-24 space-y-4">
+                            <div class="bg-surface border border-border rounded-2xl p-6 shadow-lg">
+                                <h3 class="text-lg font-bold text-primary mb-4 flex items-center gap-2"><i data-lucide="user-check" class="w-5 h-5 text-brand-end"></i> 내 활동 정보</h3>
+                                <div class="space-y-3 mb-6">
+                                    <div class="flex justify-between text-sm"><span class="text-muted">직책</span><span class="font-bold text-primary">운영진 (Admin)</span></div>
+                                    <div class="flex justify-between text-sm"><span class="text-muted">이번 달 출석</span><span class="font-bold text-primary">3 / 4 회</span></div>
+                                    <div class="flex justify-between text-sm"><span class="text-muted">회비 납부</span><span class="font-bold text-emerald-500">완료</span></div>
+                                </div>
+                                <button onclick="openMyTeamBoard()" class="w-full py-4 rounded-xl bg-gradient-to-r from-brand-start to-brand-end text-white font-bold text-base hover:opacity-90 transition-all shadow-lg shadow-brand-start/20 flex items-center justify-center gap-2 group">
+                                    <span>팀 게시판 입장</span>
+                                    <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="my-team-board-modal" class="fixed inset-0 hidden items-center justify-center p-4 z-60">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeMyTeamBoard()"></div>
         <div class="bg-background w-full max-w-5xl h-[85vh] rounded-3xl overflow-hidden relative z-10 shadow-2xl border border-border flex flex-col animate-fade-in-up">
             <div class="bg-gradient-to-r from-brand-start/20 to-brand-end/20 p-6 pb-8 border-b border-border flex justify-between items-start">
                 <div class="flex items-center gap-4">
-                    <div class="w-16 h-16 rounded-2xl bg-zinc-900 border-2 border-brand-end/50 shadow-lg overflow-hidden">
-                        <img src="https://picsum.photos/seed/volleyball1/200/200" class="w-full h-full object-cover">
-                    </div>
-                    <div>
-                        <h2 class="text-2xl font-bold text-primary">서울 주말 배구</h2>
-                        <p class="text-sm text-brand-end font-bold flex items-center gap-2"><i data-lucide="crown" class="w-4 h-4"></i> Team Admin</p>
-                    </div>
+                    <div class="w-16 h-16 rounded-2xl bg-zinc-900 border-2 border-brand-end/50 shadow-lg overflow-hidden"><img src="https://picsum.photos/seed/volleyball1/200/200" class="w-full h-full object-cover"></div>
+                    <div><h2 class="text-2xl font-bold text-primary">서울 주말 배구 <span class="text-sm font-normal text-muted ml-2">게시판</span></h2><p class="text-sm text-brand-end font-bold flex items-center gap-2"><i data-lucide="crown" class="w-4 h-4"></i> Team Admin Mode</p></div>
                 </div>
-                <button onclick="closeMyTeamModal()" class="p-2 rounded-full hover:bg-background/50 text-muted hover:text-primary transition-colors"><i data-lucide="x" class="w-6 h-6"></i></button>
+                <button onclick="closeMyTeamBoard()" class="p-2 rounded-full hover:bg-background/50 text-muted hover:text-primary transition-colors"><i data-lucide="x" class="w-6 h-6"></i></button>
             </div>
             
             <div class="flex-1 overflow-y-auto bg-background p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="md:col-span-2 space-y-6">
                     <div class="bg-surface border border-border rounded-2xl p-5">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-bold text-primary flex items-center gap-2"><i data-lucide="calendar-days" class="w-5 h-5 text-brand-start"></i> 다가오는 일정</h3>
-                            <button class="text-xs text-muted hover:text-primary underline">일정 추가</button>
-                        </div>
+                        <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-primary flex items-center gap-2"><i data-lucide="calendar-days" class="w-5 h-5 text-brand-start"></i> 다가오는 일정</h3><button class="text-xs text-muted hover:text-primary underline">일정 추가</button></div>
                         <div class="space-y-3">
-                            <div class="flex items-center gap-4 p-3 rounded-xl bg-background border border-border hover:border-brand-start/50 transition-colors cursor-pointer">
-                                <div class="w-12 h-12 rounded-lg bg-brand-start/10 text-brand-start flex flex-col items-center justify-center font-bold border border-brand-start/20"><span class="text-[10px]">FEB</span><span class="text-lg leading-none">15</span></div>
-                                <div><h4 class="font-bold text-sm text-primary">제1회 제미나이배 대회 참가</h4><p class="text-xs text-muted">광명시민체육관 · 09:00 AM</p></div>
-                            </div>
-                            <div class="flex items-center gap-4 p-3 rounded-xl bg-background border border-border hover:border-brand-end/50 transition-colors cursor-pointer">
-                                <div class="w-12 h-12 rounded-lg bg-brand-end/10 text-brand-end flex flex-col items-center justify-center font-bold border border-brand-end/20"><span class="text-[10px]">FEB</span><span class="text-lg leading-none">22</span></div>
-                                <div><h4 class="font-bold text-sm text-primary">정기 연습 (자체전)</h4><p class="text-xs text-muted">서울 구로구 체육센터 · 14:00 PM</p></div>
-                            </div>
+                            <div class="flex items-center gap-4 p-3 rounded-xl bg-background border border-border hover:border-brand-start/50 transition-colors cursor-pointer"><div class="w-12 h-12 rounded-lg bg-brand-start/10 text-brand-start flex flex-col items-center justify-center font-bold border border-brand-start/20"><span class="text-[10px]">FEB</span><span class="text-lg leading-none">15</span></div><div><h4 class="font-bold text-sm text-primary">제1회 제미나이배 대회 참가</h4><p class="text-xs text-muted">광명시민체육관 · 09:00 AM</p></div></div>
+                            <div class="flex items-center gap-4 p-3 rounded-xl bg-background border border-border hover:border-brand-end/50 transition-colors cursor-pointer"><div class="w-12 h-12 rounded-lg bg-brand-end/10 text-brand-end flex flex-col items-center justify-center font-bold border border-brand-end/20"><span class="text-[10px]">FEB</span><span class="text-lg leading-none">22</span></div><div><h4 class="font-bold text-sm text-primary">정기 연습 (자체전)</h4><p class="text-xs text-muted">서울 구로구 체육센터 · 14:00 PM</p></div></div>
                         </div>
                     </div>
-
                     <div class="bg-surface border border-border rounded-2xl p-5">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-bold text-primary flex items-center gap-2"><i data-lucide="users" class="w-5 h-5 text-brand-end"></i> 멤버 현황 (24명)</h3>
-                            <button class="text-xs text-brand-end font-bold hover:underline">가입 신청 관리 (2)</button>
-                        </div>
+                        <div class="flex justify-between items-center mb-4"><h3 class="font-bold text-primary flex items-center gap-2"><i data-lucide="users" class="w-5 h-5 text-brand-end"></i> 멤버 현황 (24명)</h3><button class="text-xs text-brand-end font-bold hover:underline">가입 신청 관리 (2)</button></div>
                         <div class="flex gap-2 overflow-x-auto pb-2 hide-scrollbar">
                             <div class="w-16 flex flex-col items-center gap-1"><img src="https://i.pravatar.cc/150?u=myprofile" class="w-12 h-12 rounded-full border-2 border-brand-end p-0.5"><span class="text-[10px] text-primary truncate w-full text-center">나(형님)</span></div>
                             <div class="w-16 flex flex-col items-center gap-1"><img src="https://i.pravatar.cc/150?u=12" class="w-12 h-12 rounded-full border border-border"><span class="text-[10px] text-muted truncate w-full text-center">김철수</span></div>
@@ -279,26 +305,14 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="space-y-6">
                     <div class="bg-surface border border-border rounded-2xl p-5">
                         <h3 class="font-bold text-primary mb-3 text-sm">📢 최신 공지</h3>
-                        <div class="space-y-2">
-                            <div class="p-3 rounded-lg bg-background border border-border text-xs text-secondary hover:text-primary cursor-pointer">
-                                <span class="text-brand-end font-bold">[필독]</span> 2월 회비 납부 안내
-                            </div>
-                            <div class="p-3 rounded-lg bg-background border border-border text-xs text-secondary hover:text-primary cursor-pointer">
-                                <span class="text-muted font-bold">[공지]</span> 체육관 대관 변경 안내
-                            </div>
-                        </div>
+                        <div class="space-y-2"><div class="p-3 rounded-lg bg-background border border-border text-xs text-secondary hover:text-primary cursor-pointer"><span class="text-brand-end font-bold">[필독]</span> 2월 회비 납부 안내</div><div class="p-3 rounded-lg bg-background border border-border text-xs text-secondary hover:text-primary cursor-pointer"><span class="text-muted font-bold">[공지]</span> 체육관 대관 변경 안내</div></div>
                     </div>
                     <div class="bg-gradient-to-br from-indigo-900 to-violet-900 border border-indigo-500/30 rounded-2xl p-5 text-white">
-                        <div class="flex justify-between items-start mb-4">
-                            <div><p class="text-xs opacity-70">이번 달 회비 현황</p><h4 class="text-2xl font-bold mt-1">650,000원</h4></div>
-                            <div class="p-2 rounded-lg bg-white/10"><i data-lucide="wallet" class="w-5 h-5"></i></div>
-                        </div>
-                        <div class="w-full bg-black/30 h-1.5 rounded-full overflow-hidden mb-2"><div class="bg-emerald-400 h-full w-[85%]"></div></div>
-                        <p class="text-[10px] opacity-70 text-right">목표 대비 85% 달성</p>
+                        <div class="flex justify-between items-start mb-4"><div><p class="text-xs opacity-70">이번 달 회비 현황</p><h4 class="text-2xl font-bold mt-1">650,000원</h4></div><div class="p-2 rounded-lg bg-white/10"><i data-lucide="wallet" class="w-5 h-5"></i></div></div>
+                        <div class="w-full bg-black/30 h-1.5 rounded-full overflow-hidden mb-2"><div class="bg-emerald-400 h-full w-[85%]"></div></div><p class="text-[10px] opacity-70 text-right">목표 대비 85% 달성</p>
                     </div>
                 </div>
             </div>
@@ -315,13 +329,11 @@
             lucide.createIcons(); 
         }
 
-        // [PROFILE MENU TOGGLE] - NEW
+        // [PROFILE MENU TOGGLE]
         function toggleProfileMenu() {
             const menu = document.getElementById('profile-menu');
             menu.classList.toggle('hidden');
         }
-
-        // 화면 클릭 시 프로필 메뉴 닫기
         window.onclick = function(event) {
             if (!event.target.closest('.relative')) {
                 document.getElementById('profile-menu').classList.add('hidden');
@@ -329,14 +341,23 @@
             }
         }
 
-        // [MY TEAM MODAL] - NEW
-        function openMyTeamModal() {
-            const modal = document.getElementById('my-team-modal');
+        // [MY TEAM FLOW: Intro -> Board]
+        function openMyTeamIntro() {
+            document.getElementById('my-team-intro-modal').classList.remove('hidden');
+            document.getElementById('my-team-intro-modal').classList.add('flex');
+        }
+        function closeMyTeamIntro() {
+            document.getElementById('my-team-intro-modal').classList.add('hidden');
+            document.getElementById('my-team-intro-modal').classList.remove('flex');
+        }
+        function openMyTeamBoard() {
+            closeMyTeamIntro(); // Close Intro first
+            const modal = document.getElementById('my-team-board-modal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         }
-        function closeMyTeamModal() {
-            const modal = document.getElementById('my-team-modal');
+        function closeMyTeamBoard() {
+            const modal = document.getElementById('my-team-board-modal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         }
