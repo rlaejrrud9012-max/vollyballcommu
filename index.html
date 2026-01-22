@@ -25,6 +25,8 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background-color: #27272A; border-radius: 4px; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* [공통 사이드바 스타일] */
         aside#left-sidebar { width: 280px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         aside#left-sidebar.collapsed { width: 80px !important; }
         .collapsed .menu-text, .collapsed .logo-text, .collapsed .profile-text { display: none; opacity: 0; }
@@ -62,7 +64,6 @@
                 <i data-lucide="search" class="w-5 h-5 min-w-[20px]"></i>
                 <span class="menu-text whitespace-nowrap">팀 찾기 (Find Team)</span>
             </a>
-            
             <div class="pt-4 mt-4 border-t border-border menu-text">
                 <p class="px-4 text-xs font-bold text-muted mb-2 uppercase whitespace-nowrap">My Team</p>
                 <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg text-secondary hover:text-primary hover:bg-surface transition-colors">
@@ -86,60 +87,17 @@
         <header class="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border px-6 py-4 flex justify-between items-center gap-4">
             <h1 class="text-xl font-bold whitespace-nowrap">Community Feed</h1>
             <a href="tournament.html" class="hidden md:flex flex-1 max-w-xl items-center justify-between p-3 rounded-xl bg-gradient-to-r from-brand-start/10 to-brand-end/10 border border-brand-start/20 hover:from-brand-start/20 hover:to-brand-end/20 transition-colors group">
-                <div class="flex items-center gap-3 overflow-hidden">
-                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-brand-start to-brand-end flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="award" class="w-6 h-6 text-white"></i>
-                    </div>
-                    <div class="overflow-hidden">
-                        <h3 class="font-bold text-primary truncate group-hover:text-brand-end transition-colors">제1회 제미나이배 전국남녀생활체육배구대회</h3>
-                        <p class="text-xs text-muted truncate">2026.02.15 ~ 02.16</p>
-                    </div>
-                </div>
-                <div class="flex flex-col items-end flex-shrink-0 pl-4">
-                    <div class="flex items-center gap-1.5"><span class="text-xs font-bold text-brand-end/90">참가신청 마감</span><span class="text-lg font-bold text-brand-end">D-3</span></div>
-                </div>
+                <div class="flex items-center gap-3 overflow-hidden"><div class="w-10 h-10 rounded-lg bg-gradient-to-br from-brand-start to-brand-end flex items-center justify-center flex-shrink-0"><i data-lucide="award" class="w-6 h-6 text-white"></i></div><div class="overflow-hidden"><h3 class="font-bold text-primary truncate group-hover:text-brand-end transition-colors">제1회 제미나이배 전국남녀생활체육배구대회</h3><p class="text-xs text-muted truncate">2026.02.15 ~ 02.16</p></div></div>
+                <div class="flex flex-col items-end flex-shrink-0 pl-4"><div class="flex items-center gap-1.5"><span class="text-xs font-bold text-brand-end/90">참가신청 마감</span><span class="text-lg font-bold text-brand-end">D-3</span></div></div>
             </a>
             <div class="md:hidden"><i data-lucide="menu" class="w-6 h-6"></i></div>
         </header>
-
         <div class="p-6 max-w-2xl mx-auto pb-20">
             <div class="bg-surface border border-border rounded-2xl p-4 mb-8 transition-all" id="writeBox">
-                <div class="flex gap-4">
-                    <img src="https://i.pravatar.cc/150?u=myprofile" class="w-10 h-10 rounded-full bg-background border border-border">
-                    <div class="flex-1">
-                        <textarea id="postInput" placeholder="오늘 경기는 어떠셨나요?" class="w-full bg-transparent text-primary resize-none focus:outline-none h-12 py-2 placeholder-muted text-sm"></textarea>
-                        <div id="youtubeInputArea" class="hidden mt-3 animate-fade-in">
-                            <div class="flex items-center gap-2 bg-background/50 rounded-lg px-3 py-2 border border-border focus-within:border-brand-end transition-colors">
-                                <i data-lucide="youtube" class="w-4 h-4 text-red-500"></i>
-                                <input type="text" id="youtubeUrl" placeholder="유튜브 링크를 붙여넣으세요" class="w-full bg-transparent text-xs text-primary focus:outline-none placeholder-muted">
-                                <button onclick="toggleTool('youtube')" class="text-muted hover:text-primary"><i data-lucide="x" class="w-3 h-3"></i></button>
-                            </div>
-                        </div>
-                        <div id="pollInputArea" class="hidden mt-3 animate-fade-in space-y-2">
-                            <div class="p-3 rounded-xl bg-background/50 border border-border">
-                                <h4 class="text-xs font-bold text-muted mb-2 flex items-center gap-2"><i data-lucide="vote" class="w-3 h-3"></i> 투표 만들기</h4>
-                                <input type="text" id="pollOption1" placeholder="옵션 1" class="w-full bg-surface border border-border rounded-lg px-3 py-2 text-xs mb-2 focus:outline-none focus:border-brand-end">
-                                <input type="text" id="pollOption2" placeholder="옵션 2" class="w-full bg-surface border border-border rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-brand-end">
-                            </div>
-                            <div class="flex justify-end"><button onclick="toggleTool('poll')" class="text-xs text-muted hover:text-primary underline">취소</button></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex justify-between items-center mt-3 pt-3 border-t border-border/50">
-                    <div class="flex gap-1">
-                        <button class="flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-emerald-500/10 text-muted hover:text-emerald-500 transition-colors group"><i data-lucide="image-plus" class="w-5 h-5"></i></button>
-                        <button onclick="toggleTool('youtube')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-rose-500/10 text-muted hover:text-rose-500 transition-colors group"><i data-lucide="play-circle" class="w-5 h-5"></i></button>
-                        <button onclick="toggleTool('poll')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-orange-500/10 text-muted hover:text-orange-500 transition-colors group"><i data-lucide="vote" class="w-5 h-5"></i></button>
-                    </div>
-                    <button onclick="handlePost()" class="px-5 py-2 rounded-lg bg-gradient-to-r from-brand-start to-brand-end text-white font-medium hover:opacity-90 transition-all text-sm shadow-lg shadow-brand-start/20">게시하기</button>
-                </div>
+                <div class="flex gap-4"><img src="https://i.pravatar.cc/150?u=myprofile" class="w-10 h-10 rounded-full bg-background border border-border"><div class="flex-1"><textarea id="postInput" placeholder="오늘 경기는 어떠셨나요?" class="w-full bg-transparent text-primary resize-none focus:outline-none h-12 py-2 placeholder-muted text-sm"></textarea><div id="youtubeInputArea" class="hidden mt-3 animate-fade-in"><div class="flex items-center gap-2 bg-background/50 rounded-lg px-3 py-2 border border-border focus-within:border-brand-end transition-colors"><i data-lucide="youtube" class="w-4 h-4 text-red-500"></i><input type="text" id="youtubeUrl" placeholder="유튜브 링크를 붙여넣으세요" class="w-full bg-transparent text-xs text-primary focus:outline-none placeholder-muted"><button onclick="toggleTool('youtube')" class="text-muted hover:text-primary"><i data-lucide="x" class="w-3 h-3"></i></button></div></div><div id="pollInputArea" class="hidden mt-3 animate-fade-in space-y-2"><div class="p-3 rounded-xl bg-background/50 border border-border"><h4 class="text-xs font-bold text-muted mb-2 flex items-center gap-2"><i data-lucide="vote" class="w-3 h-3"></i> 투표 만들기</h4><input type="text" id="pollOption1" placeholder="옵션 1" class="w-full bg-surface border border-border rounded-lg px-3 py-2 text-xs mb-2 focus:outline-none focus:border-brand-end"><input type="text" id="pollOption2" placeholder="옵션 2" class="w-full bg-surface border border-border rounded-lg px-3 py-2 text-xs focus:outline-none focus:border-brand-end"></div><div class="flex justify-end"><button onclick="toggleTool('poll')" class="text-xs text-muted hover:text-primary underline">취소</button></div></div></div></div>
+                <div class="flex justify-between items-center mt-3 pt-3 border-t border-border/50"><div class="flex gap-1"><button class="flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-emerald-500/10 text-muted hover:text-emerald-500 transition-colors group"><i data-lucide="image-plus" class="w-5 h-5"></i></button><button onclick="toggleTool('youtube')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-rose-500/10 text-muted hover:text-rose-500 transition-colors group"><i data-lucide="play-circle" class="w-5 h-5"></i></button><button onclick="toggleTool('poll')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-orange-500/10 text-muted hover:text-orange-500 transition-colors group"><i data-lucide="vote" class="w-5 h-5"></i></button></div><button onclick="handlePost()" class="px-5 py-2 rounded-lg bg-gradient-to-r from-brand-start to-brand-end text-white font-medium hover:opacity-90 transition-all text-sm shadow-lg shadow-brand-start/20">게시하기</button></div>
             </div>
-
-            <div class="flex items-center gap-6 border-b border-border mb-6 px-2">
-                <button class="pb-3 border-b-2 border-brand-end text-brand-end font-bold">전체 글</button>
-                <button class="pb-3 border-b-2 border-transparent text-muted hover:text-primary transition-colors">인기 글</button>
-            </div>
-
+            <div class="flex items-center gap-6 border-b border-border mb-6 px-2"><button class="pb-3 border-b-2 border-brand-end text-brand-end font-bold">전체 글</button><button class="pb-3 border-b-2 border-transparent text-muted hover:text-primary transition-colors">인기 글</button></div>
             <div id="feed-container" class="space-y-6"></div>
         </div>
     </main>
