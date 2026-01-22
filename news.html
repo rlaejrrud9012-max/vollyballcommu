@@ -24,7 +24,6 @@
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background-color: #27272A; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background-color: #3F3F46; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .stable-scroll { scrollbar-gutter: stable; }
         .news-card:hover .news-image { transform: scale(1.05); }
@@ -32,23 +31,27 @@
         
         aside#left-sidebar { width: 280px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         aside#left-sidebar.collapsed { width: 80px !important; }
-        .collapsed .menu-text, .collapsed .logo-text, .collapsed .profile-text { display: none; opacity: 0; }
+        .collapsed .menu-text, .collapsed .logo-text, .collapsed .profile-text { display: none !important; opacity: 0; }
         .collapsed .nav-item { justify-content: center; padding-left: 0; padding-right: 0; }
-        .collapsed .sidebar-header { flex-direction: column; gap: 1rem; justify-content: center; padding-top: 1.5rem; padding-bottom: 1rem; }
-        .collapsed .toggle-btn { position: static; margin-top: 0; transform: none; }
+        .collapsed .sidebar-header { justify-content: center; padding-left: 0; padding-right: 0; }
+        .collapsed .logo-area { display: none; }
+        .collapsed .team-card { padding: 8px 0; justify-content: center; background: transparent; border-color: transparent; }
+        .collapsed .team-card:hover { background-color: #27272A; }
     </style>
 </head>
 <body class="h-screen w-full flex text-sm">
 
     <aside id="left-sidebar" class="h-full border-r border-border flex flex-col bg-background hidden md:flex relative group flex-shrink-0">
-        <div class="p-6 flex items-center justify-between sidebar-header">
-            <div class="flex items-center gap-3 overflow-hidden">
+        <div class="p-6 flex items-center justify-between sidebar-header h-[88px]">
+            <a href="index.html" class="flex items-center gap-3 overflow-hidden logo-area">
                 <div class="w-8 h-8 min-w-[32px] rounded-lg bg-gradient-to-br from-brand-start to-brand-end flex items-center justify-center">
                     <i data-lucide="volleyball" class="w-5 h-5 text-white"></i>
                 </div>
                 <span class="text-lg font-bold tracking-tight logo-text whitespace-nowrap">Spike.KR</span>
-            </div>
-            <button onclick="toggleSidebar()" class="toggle-btn p-1.5 rounded-md hover:bg-surface text-muted hover:text-primary transition-colors"><i data-lucide="panel-left" class="w-5 h-5"></i></button>
+            </a>
+            <button onclick="toggleSidebar()" class="toggle-btn p-2 rounded-lg hover:bg-surface text-muted hover:text-primary transition-colors">
+                <i id="toggle-icon" data-lucide="chevrons-left" class="w-5 h-5"></i>
+            </button>
         </div>
         <nav class="flex-1 px-4 space-y-1 overflow-y-auto hide-scrollbar overflow-x-hidden">
             <a href="index.html" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-secondary hover:text-primary hover:bg-surface transition-colors">
@@ -67,21 +70,24 @@
                 <i data-lucide="search" class="w-5 h-5 min-w-[20px]"></i>
                 <span class="menu-text whitespace-nowrap">팀 찾기 (Find Team)</span>
             </a>
-            <div class="pt-4 mt-4 border-t border-border menu-text">
-                <p class="px-4 text-xs font-bold text-muted mb-2 uppercase whitespace-nowrap">My Team</p>
-                <a href="#" class="flex items-center gap-3 px-4 py-2 rounded-lg text-secondary hover:text-primary hover:bg-surface transition-colors">
-                    <span class="w-2 h-2 rounded-full bg-brand-end min-w-[8px]"></span>
-                    <span class="menu-text whitespace-nowrap">서울 주말 배구</span>
+            <div class="pt-6 mt-2">
+                <p class="px-4 text-xs font-bold text-muted mb-3 uppercase menu-text">My Team</p>
+                <a href="#" class="team-card flex items-center gap-3 p-3 rounded-xl bg-surface border border-border hover:border-brand-end transition-colors group">
+                    <div class="relative w-8 h-8 min-w-[32px]">
+                        <img src="https://picsum.photos/seed/volleyball1/100/100" class="w-full h-full rounded-lg object-cover">
+                        <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-brand-end rounded-full border-2 border-surface"></span>
+                    </div>
+                    <div class="menu-text overflow-hidden">
+                        <p class="text-sm font-bold text-primary truncate group-hover:text-brand-end transition-colors">서울 주말 배구</p>
+                        <p class="text-[10px] text-muted truncate">멤버 24명 · 서울</p>
+                    </div>
                 </a>
             </div>
         </nav>
         <div class="p-4 border-t border-border">
             <button class="nav-item flex items-center gap-3 w-full p-2 rounded-xl hover:bg-surface transition-colors text-left overflow-hidden">
                 <img src="https://i.pravatar.cc/150?u=myprofile" class="w-9 h-9 min-w-[36px] rounded-full bg-surface border border-border">
-                <div class="flex-1 profile-text overflow-hidden">
-                    <p class="text-sm font-medium text-primary whitespace-nowrap">형님 (Admin)</p>
-                    <p class="text-xs text-muted whitespace-nowrap">@bigbrother</p>
-                </div>
+                <div class="flex-1 profile-text overflow-hidden"><p class="text-sm font-medium text-primary whitespace-nowrap">형님 (Admin)</p><p class="text-xs text-muted whitespace-nowrap">@bigbrother</p></div>
             </button>
         </div>
     </aside>
@@ -89,13 +95,8 @@
     <main class="flex-1 h-full overflow-y-auto bg-background p-8">
         <header class="flex justify-between items-end mb-8">
             <div><h1 class="text-2xl font-bold mb-2">오늘의 배구 소식</h1><p class="text-muted">국내 V리그부터 해외파 소식까지 한눈에 확인하세요.</p></div>
-            <div class="flex gap-2">
-                <button class="px-3 py-1.5 rounded-lg bg-surface border border-brand-end text-brand-end text-xs font-bold transition-colors">전체</button>
-                <button class="px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-brand-end hover:text-brand-end text-muted text-xs font-medium transition-colors">V리그</button>
-                <button class="px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-brand-end hover:text-brand-end text-muted text-xs font-medium transition-colors">국가대표</button>
-            </div>
+            <div class="flex gap-2"><button class="px-3 py-1.5 rounded-lg bg-surface border border-brand-end text-brand-end text-xs font-bold transition-colors">전체</button><button class="px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-brand-end hover:text-brand-end text-muted text-xs font-medium transition-colors">V리그</button><button class="px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-brand-end hover:text-brand-end text-muted text-xs font-medium transition-colors">국가대표</button></div>
         </header>
-
         <section class="mb-10">
             <div onclick="openNewsModal(0)" class="news-card cursor-pointer group relative w-full h-80 rounded-2xl overflow-hidden border border-border bg-zinc-900">
                 <img src="https://images.unsplash.com/photo-1592656094267-764a45160876?auto=format&fit=crop&q=80&w=1600" referrerpolicy="no-referrer" class="news-image w-full h-full object-cover opacity-60 transition-transform duration-500">
@@ -108,7 +109,6 @@
                 </div>
             </div>
         </section>
-
         <section>
             <h3 class="text-lg font-bold mb-4 flex items-center gap-2"><i data-lucide="zap" class="w-5 h-5 text-yellow-500"></i> 실시간 뉴스</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="news-grid"></div>
@@ -145,16 +145,22 @@
                         <div class="flex gap-4 mb-4"><img src="https://i.pravatar.cc/150?u=myprofile" class="w-10 h-10 rounded-full bg-background border border-border"><textarea id="commentInput" placeholder="이 뉴스에 대한 의견을 남겨주세요." class="w-full bg-transparent text-primary resize-none focus:outline-none h-12 py-2 placeholder-muted text-sm"></textarea></div>
                         <div class="flex justify-end"><button onclick="addComment()" class="px-5 py-2 rounded-lg bg-surface_hover border border-border text-primary font-medium hover:bg-zinc-700 transition-all text-sm">등록</button></div>
                     </div>
-                    <div id="comment-list" class="space-y-6">
-                        <div class="flex gap-4"><img src="https://i.pravatar.cc/150?u=55" class="w-10 h-10 rounded-full border border-border"><div><div class="flex items-center gap-2 mb-1"><span class="font-bold text-sm">VolleyFan</span><span class="text-xs text-muted">10분 전</span></div><p class="text-sm text-secondary">와 진짜 오늘 경기력 미쳤다... 4연패 인정합니다 ㄷㄷ</p></div></div>
-                    </div>
+                    <div id="comment-list" class="space-y-6"><div class="flex gap-4"><img src="https://i.pravatar.cc/150?u=55" class="w-10 h-10 rounded-full border border-border"><div><div class="flex items-center gap-2 mb-1"><span class="font-bold text-sm">VolleyFan</span><span class="text-xs text-muted">10분 전</span></div><p class="text-sm text-secondary">와 진짜 오늘 경기력 미쳤다... 4연패 인정합니다 ㄷㄷ</p></div></div></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        function toggleSidebar() { document.getElementById('left-sidebar').classList.toggle('collapsed'); }
+        // [수정 3] 토글 로직
+        function toggleSidebar() { 
+            const sidebar = document.getElementById('left-sidebar');
+            sidebar.classList.toggle('collapsed');
+            const icon = document.getElementById('toggle-icon');
+            if (sidebar.classList.contains('collapsed')) { icon.setAttribute('data-lucide', 'chevrons-right'); } 
+            else { icon.setAttribute('data-lucide', 'chevrons-left'); }
+            lucide.createIcons(); 
+        }
         lucide.createIcons();
 
         const newsData = [
@@ -164,17 +170,14 @@
             { id: 3, title: "V리그 남자부 신인 드래프트, 전체 1순위의 영광은 누구에게?", summary: "내일 열리는 신인 드래프트에 배구계의 이목이 쏠리고 있다.", content: "본문 내용...", image: "https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&q=80&w=800", source: "더스파이크", date: "1일 전", category: "드래프트", comments: 18 },
             { id: 4, title: "[분석] 아시아쿼터 도입 1년, V리그에 미친 영향과 과제", summary: "아시아쿼터 제도가 시행된 지 한 시즌이 지났다.", content: "본문 내용...", image: "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?auto=format&fit=crop&q=80&w=800", source: "OSEN", date: "1일 전", category: "칼럼", comments: 56 }
         ];
-
         const grid = document.getElementById('news-grid');
         const popularList = document.getElementById('popular-news-list');
-
         newsData.slice(1).forEach((news) => {
             grid.innerHTML += `<div onclick="openNewsModal(${news.id})" class="news-card cursor-pointer group rounded-xl bg-surface border border-border overflow-hidden hover:border-brand-end/50 transition-all hover:-translate-y-1"><div class="h-40 w-full overflow-hidden relative"><img src="${news.image}" referrerpolicy="no-referrer" class="news-image w-full h-full object-cover transition-transform duration-500"><span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/60 backdrop-blur-md text-[10px] text-white border border-white/10">${news.category}</span></div><div class="p-4"><h3 class="font-bold text-base mb-2 group-hover:text-brand-end transition-colors line-clamp-2 leading-snug">${news.title}</h3><p class="text-xs text-secondary line-clamp-2 mb-3 leading-relaxed">${news.summary}</p><div class="flex justify-between items-center text-[10px] text-muted border-t border-border pt-3"><span>${news.source} · ${news.date}</span><span class="flex items-center gap-1"><i data-lucide="message-square" class="w-3 h-3"></i> ${news.comments}</span></div></div></div>`;
             if(news.id <= 3) {
                 popularList.innerHTML += `<div onclick="openNewsModal(${news.id})" class="flex gap-3 cursor-pointer group"><div class="w-16 h-16 rounded-lg bg-zinc-800 overflow-hidden shrink-0"><img src="${news.image}" referrerpolicy="no-referrer" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity"></div><div><h4 class="text-xs font-bold text-primary group-hover:text-brand-end transition-colors line-clamp-2 mb-1">${news.title}</h4><span class="text-[10px] text-muted">${news.date}</span></div></div>`;
             }
         });
-
         function openNewsModal(index) {
             let data = newsData.find(item => item.id === index);
             if(!data) return;
