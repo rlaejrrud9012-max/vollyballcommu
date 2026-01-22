@@ -27,6 +27,7 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background-color: #27272A; border-radius: 4px; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
+        
         aside#left-sidebar { width: 280px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         aside#left-sidebar.collapsed { width: 80px !important; }
         .collapsed .menu-text, .collapsed .logo-text, .collapsed .profile-text { display: none !important; opacity: 0; }
@@ -37,6 +38,9 @@
         .collapsed .team-card:hover { background-color: #27272A; }
         .dropdown-menu { display: none; }
         .dropdown-menu.show { display: block; }
+        
+        /* 모달 관련 스타일 */
+        .stable-scroll { scrollbar-gutter: stable; }
     </style>
 </head>
 <body class="h-screen w-full flex text-sm">
@@ -133,20 +137,49 @@
                     <h2 class="text-xl font-bold mb-6 flex items-center gap-2"><i data-lucide="map-pin" class="w-6 h-6 text-brand-end"></i> <span id="result-title">경기 결과</span> 검색 결과 (3)</h2>
                     <div class="space-y-4">
                         <div class="flex items-center justify-between p-5 rounded-2xl bg-surface border border-border hover:border-brand-end/50 transition-colors group">
-                            <div class="flex items-center gap-5"><img src="https://picsum.photos/seed/volleyball1/100/100" class="w-20 h-20 rounded-xl object-cover border border-border"><div><h3 class="font-bold text-lg text-primary mb-1 group-hover:text-brand-end transition-colors">광명 스파이커즈</h3><div class="flex items-center gap-4 text-sm text-muted"><span class="flex items-center gap-1.5"><i data-lucide="users" class="w-4 h-4"></i> 24명</span><span class="w-1 h-1 rounded-full bg-zinc-700"></span><span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-4 h-4"></i> 일 11:00 ~ 14:00</span></div></div></div>
-                            <button class="px-5 py-2.5 rounded-xl bg-surface_hover border border-border text-sm font-bold text-primary hover:bg-zinc-700 transition-colors">상세보기</button>
+                            <div class="flex items-center gap-5">
+                                <img src="https://picsum.photos/seed/volleyball1/100/100" class="w-20 h-20 rounded-xl object-cover border border-border">
+                                <div>
+                                    <h3 class="font-bold text-lg text-primary mb-1 group-hover:text-brand-end transition-colors">광명 스파이커즈</h3>
+                                    <div class="flex items-center gap-4 text-sm text-muted">
+                                        <span class="flex items-center gap-1.5"><i data-lucide="users" class="w-4 h-4"></i> 24명</span>
+                                        <span class="w-1 h-1 rounded-full bg-zinc-700"></span>
+                                        <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-4 h-4"></i> 일 11:00 ~ 14:00</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button onclick="openTeamModal('광명 스파이커즈')" class="px-5 py-2.5 rounded-xl bg-surface_hover border border-border text-sm font-bold text-primary hover:bg-zinc-700 transition-colors">상세보기</button>
                         </div>
                         <div class="flex items-center justify-between p-5 rounded-2xl bg-surface border border-border hover:border-brand-end/50 transition-colors group">
-                            <div class="flex items-center gap-5"><img src="https://picsum.photos/seed/volleyball3/100/100" class="w-20 h-20 rounded-xl object-cover border border-border"><div><h3 class="font-bold text-lg text-primary mb-1 group-hover:text-brand-end transition-colors">철산 윙스</h3><div class="flex items-center gap-4 text-sm text-muted"><span class="flex items-center gap-1.5"><i data-lucide="users" class="w-4 h-4"></i> 15명</span><span class="w-1 h-1 rounded-full bg-zinc-700"></span><span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-4 h-4"></i> 토 18:00 ~ 21:00</span></div></div></div>
-                            <button class="px-5 py-2.5 rounded-xl bg-surface_hover border border-border text-sm font-bold text-primary hover:bg-zinc-700 transition-colors">상세보기</button>
+                            <div class="flex items-center gap-5">
+                                <img src="https://picsum.photos/seed/volleyball3/100/100" class="w-20 h-20 rounded-xl object-cover border border-border">
+                                <div>
+                                    <h3 class="font-bold text-lg text-primary mb-1 group-hover:text-brand-end transition-colors">철산 윙스</h3>
+                                    <div class="flex items-center gap-4 text-sm text-muted">
+                                        <span class="flex items-center gap-1.5"><i data-lucide="users" class="w-4 h-4"></i> 15명</span>
+                                        <span class="w-1 h-1 rounded-full bg-zinc-700"></span>
+                                        <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-4 h-4"></i> 토 18:00 ~ 21:00</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button onclick="openTeamModal('철산 윙스')" class="px-5 py-2.5 rounded-xl bg-surface_hover border border-border text-sm font-bold text-primary hover:bg-zinc-700 transition-colors">상세보기</button>
                         </div>
                     </div>
                 </div>
                 <div class="mb-10 animate-fade-in-up" style="animation-delay: 0.2s;">
                     <div class="flex justify-between items-end mb-6"><h2 class="text-xl font-bold flex items-center gap-2 text-white"><i data-lucide="sparkles" class="w-6 h-6 text-brand-start"></i> AI 추천 인근 팀</h2><span class="text-sm text-muted">형님의 활동 패턴과 유사한 팀입니다.</span></div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div class="rounded-2xl bg-gradient-to-br from-surface to-surface_hover border border-brand-start/30 p-6 relative group hover:border-brand-start transition-all shadow-lg"><div class="absolute -top-3 -right-3 w-10 h-10 bg-brand-start rounded-full flex items-center justify-center text-white shadow-lg shadow-brand-start/40 z-10"><i data-lucide="thumbs-up" class="w-5 h-5"></i></div><div class="flex items-center gap-4 mb-4"><img src="https://picsum.photos/seed/volleyball5/100/100" class="w-14 h-14 rounded-xl border border-white/10"><div><h3 class="font-bold text-lg text-primary">구로 하이큐</h3><p class="text-xs text-brand-start font-medium">매치 적합도 98%</p></div></div><div class="space-y-2 text-sm text-secondary mb-5"><div class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-muted"></i> 서울 구로구 (3km)</div><div class="flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4 text-muted"></i> 매주 토요일 14:00</div></div><button class="w-full py-3 rounded-xl bg-primary text-background font-bold text-sm hover:opacity-90 transition-colors">팀 구경하기</button></div>
-                        <div class="rounded-2xl bg-surface border border-border p-6 relative group hover:border-brand-end transition-all"><div class="flex items-center gap-4 mb-4"><img src="https://picsum.photos/seed/volleyball6/100/100" class="w-14 h-14 rounded-xl border border-white/10"><div><h3 class="font-bold text-lg text-primary">목동 스파이크</h3><p class="text-xs text-brand-end font-medium">활동 시간 일치</p></div></div><div class="space-y-2 text-sm text-secondary mb-5"><div class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-muted"></i> 서울 양천구 (5km)</div><div class="flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4 text-muted"></i> 매주 일요일 10:00</div></div><button class="w-full py-3 rounded-xl bg-surface_hover border border-border text-primary font-bold text-sm hover:bg-zinc-700 transition-colors">팀 구경하기</button></div>
+                        <div class="rounded-2xl bg-gradient-to-br from-surface to-surface_hover border border-brand-start/30 p-6 relative group hover:border-brand-start transition-all shadow-lg">
+                            <div class="absolute -top-3 -right-3 w-10 h-10 bg-brand-start rounded-full flex items-center justify-center text-white shadow-lg shadow-brand-start/40 z-10"><i data-lucide="thumbs-up" class="w-5 h-5"></i></div>
+                            <div class="flex items-center gap-4 mb-4"><img src="https://picsum.photos/seed/volleyball5/100/100" class="w-14 h-14 rounded-xl border border-white/10"><div><h3 class="font-bold text-lg text-primary">구로 하이큐</h3><p class="text-xs text-brand-start font-medium">매치 적합도 98%</p></div></div>
+                            <div class="space-y-2 text-sm text-secondary mb-5"><div class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-muted"></i> 서울 구로구 (3km)</div><div class="flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4 text-muted"></i> 매주 토요일 14:00</div></div>
+                            <button onclick="openTeamModal('구로 하이큐')" class="w-full py-3 rounded-xl bg-primary text-background font-bold text-sm hover:opacity-90 transition-colors">팀 구경하기</button>
+                        </div>
+                        <div class="rounded-2xl bg-surface border border-border p-6 relative group hover:border-brand-end transition-all">
+                            <div class="flex items-center gap-4 mb-4"><img src="https://picsum.photos/seed/volleyball6/100/100" class="w-14 h-14 rounded-xl border border-white/10"><div><h3 class="font-bold text-lg text-primary">목동 스파이크</h3><p class="text-xs text-brand-end font-medium">활동 시간 일치</p></div></div>
+                            <div class="space-y-2 text-sm text-secondary mb-5"><div class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-muted"></i> 서울 양천구 (5km)</div><div class="flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4 text-muted"></i> 매주 일요일 10:00</div></div>
+                            <button onclick="openTeamModal('목동 스파이크')" class="w-full py-3 rounded-xl bg-surface_hover border border-border text-primary font-bold text-sm hover:bg-zinc-700 transition-colors">팀 구경하기</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -154,9 +187,150 @@
     </main>
 
     <aside class="w-[450px] h-full p-6 hidden lg:block bg-background overflow-y-auto flex-shrink-0 border-l border-border">
-        <div class="mb-8"><h3 class="text-xs font-bold text-muted uppercase tracking-wider mb-4 flex items-center justify-between">나의 가입 신청 <span class="bg-brand-end text-white px-1.5 rounded text-[10px]">1</span></h3><div class="space-y-3"><div class="p-3 rounded-xl bg-surface border border-border flex items-center gap-3"><img src="https://picsum.photos/seed/volleyball3/100/100" class="w-10 h-10 rounded-lg bg-zinc-800"><div class="flex-1 min-w-0"><h4 class="text-sm font-bold text-primary">철산 윙스</h4><p class="text-xs text-brand-end">승인 대기중...</p></div><button class="text-xs text-muted hover:text-red-500 underline">취소</button></div></div></div>
-        <div><h3 class="text-xs font-bold text-muted uppercase tracking-wider mb-4 flex items-center gap-2">🔥 급구! 실시간 게스트</h3><div class="space-y-3"><div class="p-4 rounded-xl bg-surface border border-border hover:border-brand-start/50 transition-colors cursor-pointer group"><div class="flex justify-between items-start mb-2"><span class="px-1.5 py-0.5 rounded bg-brand-start/20 text-brand-start text-[10px] font-bold">오늘 19:00</span><span class="text-xs text-muted">서울 강서구</span></div><h4 class="font-bold text-sm text-primary mb-1 group-hover:text-brand-start transition-colors">세터 1명 급하게 구합니다!</h4><p class="text-xs text-secondary mb-3">경기비 지원해드립니다. 바로 오실 수 있는 분 연락주세요.</p><div class="flex items-center gap-2"><img src="https://i.pravatar.cc/150?u=88" class="w-5 h-5 rounded-full"><span class="text-xs text-muted">강서배구왕</span></div></div><div class="p-4 rounded-xl bg-surface border border-border hover:border-brand-start/50 transition-colors cursor-pointer group"><div class="flex justify-between items-start mb-2"><span class="px-1.5 py-0.5 rounded bg-brand-start/20 text-brand-start text-[10px] font-bold">내일 14:00</span><span class="text-xs text-muted">경기 안산시</span></div><h4 class="font-bold text-sm text-primary mb-1 group-hover:text-brand-start transition-colors">미들블로커(센터) 게스트 모십니다</h4><p class="text-xs text-secondary mb-3">자체전 진행합니다. 즐겁게 하실 분!</p><div class="flex items-center gap-2"><img src="https://i.pravatar.cc/150?u=42" class="w-5 h-5 rounded-full"><span class="text-xs text-muted">안산스파이크</span></div></div></div><button class="w-full mt-4 py-2 rounded-lg border border-border text-xs text-muted hover:bg-surface transition-colors">더보기</button></div>
+        <div class="mb-8"><h3 class="text-xs font-bold text-muted uppercase tracking-wider mb-4 flex items-center justify-between">나의 가입 신청 <span class="bg-brand-end text-white px-1.5 rounded text-[10px]">1</span></h3><div class="space-y-3"><div class="p-3 rounded-xl bg-surface border border-border flex items-center gap-3"><img src="https://picsum.photos/seed/volleyball3/100/100" class="w-10 h-10 rounded-lg bg-zinc-800"><div class="flex-1 min-w-0"><h4 class="text-sm font-bold text-primary">철산 윙스</h4><p class="text-xs text-brand-end">승인 대기중...</p></div><button onclick="alert('신청 취소 기능은 준비 중입니다.')" class="text-xs text-muted hover:text-red-500 underline">취소</button></div></div></div>
+        <div><h3 class="text-xs font-bold text-muted uppercase tracking-wider mb-4 flex items-center gap-2">🔥 급구! 실시간 게스트</h3><div class="space-y-3"><div class="p-4 rounded-xl bg-surface border border-border hover:border-brand-start/50 transition-colors cursor-pointer group"><div class="flex justify-between items-start mb-2"><span class="px-1.5 py-0.5 rounded bg-brand-start/20 text-brand-start text-[10px] font-bold">오늘 19:00</span><span class="text-xs text-muted">서울 강서구</span></div><h4 class="font-bold text-sm text-primary mb-1 group-hover:text-brand-start transition-colors">세터 1명 급하게 구합니다!</h4><p class="text-xs text-secondary mb-3">경기비 지원해드립니다. 바로 오실 수 있는 분 연락주세요.</p><div class="flex items-center gap-2"><img src="https://i.pravatar.cc/150?u=88" class="w-5 h-5 rounded-full"><span class="text-xs text-muted">강서배구왕</span></div></div><div class="p-4 rounded-xl bg-surface border border-border hover:border-brand-start/50 transition-colors cursor-pointer group"><div class="flex justify-between items-start mb-2"><span class="px-1.5 py-0.5 rounded bg-brand-start/20 text-brand-start text-[10px] font-bold">내일 14:00</span><span class="text-xs text-muted">경기 안산시</span></div><h4 class="font-bold text-sm text-primary mb-1 group-hover:text-brand-start transition-colors">미들블로커(센터) 게스트 모십니다</h4><p class="text-xs text-secondary mb-3">자체전 진행합니다. 즐겁게 하실 분!</p><div class="flex items-center gap-2"><img src="https://i.pravatar.cc/150?u=42" class="w-5 h-5 rounded-full"><span class="text-xs text-muted">안산스파이크</span></div></div></div><button onclick="alert('더 많은 목록을 불러옵니다.')" class="w-full mt-4 py-2 rounded-lg border border-border text-xs text-muted hover:bg-surface transition-colors">더보기</button></div>
     </aside>
+
+    <div id="team-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-6 stable-scroll">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="closeTeamModal()"></div>
+        
+        <div class="bg-background w-full max-w-5xl h-[90vh] rounded-3xl overflow-hidden relative z-10 shadow-2xl border border-border flex flex-col animate-fade-in-up">
+            
+            <div class="sticky top-0 z-20 bg-background/90 backdrop-blur-md border-b border-border px-6 py-4 flex justify-between items-center shrink-0">
+                <div class="flex items-center gap-3">
+                    <h2 class="text-lg font-bold truncate text-primary" id="modal-team-name">Team Name</h2>
+                    <span class="px-2 py-0.5 rounded-full bg-brand-end/10 text-brand-end text-[10px] font-bold border border-brand-end/20">승인제</span>
+                </div>
+                <div class="flex gap-2">
+                    <button class="p-2 rounded-full hover:bg-surface text-muted hover:text-primary transition-colors"><i data-lucide="share-2" class="w-5 h-5"></i></button>
+                    <button onclick="closeTeamModal()" class="p-2 rounded-full hover:bg-surface text-muted hover:text-primary transition-colors"><i data-lucide="x" class="w-6 h-6"></i></button>
+                </div>
+            </div>
+
+            <div class="overflow-y-auto stable-scroll flex-1 p-0 bg-background">
+                
+                <div class="relative h-64 md:h-80 bg-zinc-800 group">
+                    <img id="modal-cover-img" src="https://images.unsplash.com/photo-1612872087720-48ca45e4c6c0?auto=format&fit=crop&q=80&w=1200" referrerpolicy="no-referrer" class="w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-700">
+                    <div class="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 w-full p-6 md:p-8 flex items-end gap-6">
+                        <div class="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-zinc-900 border-4 border-background shadow-2xl overflow-hidden flex-shrink-0 -mb-4 relative z-10">
+                            <img id="modal-logo-img" src="" class="w-full h-full object-cover">
+                        </div>
+                        <div class="mb-1 flex-1">
+                            <h1 class="text-3xl md:text-4xl font-bold text-white mb-2 shadow-sm" id="modal-hero-name">Team Name</h1>
+                            <p class="text-sm text-zinc-300 flex items-center gap-2 font-medium">
+                                <i data-lucide="map-pin" class="w-4 h-4 text-brand-start"></i> <span id="modal-location">지역 정보</span>
+                                <span class="w-1 h-1 rounded-full bg-zinc-500"></span>
+                                <span>멤버 <span id="modal-member-count">0</span>명</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 md:p-8 pt-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <div class="lg:col-span-2 space-y-8">
+                        <section>
+                            <h3 class="text-lg font-bold mb-4 flex items-center gap-2 text-primary">👋 팀 소개</h3>
+                            <div class="prose prose-invert prose-sm max-w-none text-secondary leading-relaxed bg-surface/50 p-6 rounded-2xl border border-border">
+                                <p id="modal-desc">팀 소개글이 로딩 중입니다...</p>
+                            </div>
+                        </section>
+
+                        <section>
+                            <h3 class="text-lg font-bold mb-4 flex items-center gap-2 text-primary">⚡ 활동 정보</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="p-4 bg-surface rounded-xl border border-border flex items-start gap-4">
+                                    <div class="p-2.5 rounded-lg bg-background border border-border text-brand-end"><i data-lucide="clock" class="w-5 h-5"></i></div>
+                                    <div>
+                                        <p class="text-xs text-muted font-bold mb-0.5">정기 운동</p>
+                                        <p class="text-sm font-bold text-primary" id="modal-time">시간 정보</p>
+                                    </div>
+                                </div>
+                                <div class="p-4 bg-surface rounded-xl border border-border flex items-start gap-4">
+                                    <div class="p-2.5 rounded-lg bg-background border border-border text-brand-start"><i data-lucide="map" class="w-5 h-5"></i></div>
+                                    <div>
+                                        <p class="text-xs text-muted font-bold mb-0.5">주요 체육관</p>
+                                        <p class="text-sm font-bold text-primary">광명시민체육관</p>
+                                    </div>
+                                </div>
+                                <div class="p-4 bg-surface rounded-xl border border-border flex items-start gap-4">
+                                    <div class="p-2.5 rounded-lg bg-background border border-border text-yellow-500"><i data-lucide="coins" class="w-5 h-5"></i></div>
+                                    <div>
+                                        <p class="text-xs text-muted font-bold mb-0.5">월 회비</p>
+                                        <p class="text-sm font-bold text-primary">30,000원 <span class="text-xs font-normal text-muted">(가입비 별도)</span></p>
+                                    </div>
+                                </div>
+                                <div class="p-4 bg-surface rounded-xl border border-border flex items-start gap-4">
+                                    <div class="p-2.5 rounded-lg bg-background border border-border text-emerald-500"><i data-lucide="users" class="w-5 h-5"></i></div>
+                                    <div>
+                                        <p class="text-xs text-muted font-bold mb-0.5">성비 구성</p>
+                                        <p class="text-sm font-bold text-primary">남 6 : 여 4</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <h3 class="text-lg font-bold mb-4 flex items-center gap-2 text-primary">📸 활동 사진</h3>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div class="aspect-square rounded-xl bg-zinc-800 overflow-hidden"><img src="https://picsum.photos/seed/volley1/300/300" class="w-full h-full object-cover hover:scale-110 transition-transform cursor-pointer"></div>
+                                <div class="aspect-square rounded-xl bg-zinc-800 overflow-hidden"><img src="https://picsum.photos/seed/volley2/300/300" class="w-full h-full object-cover hover:scale-110 transition-transform cursor-pointer"></div>
+                                <div class="aspect-square rounded-xl bg-zinc-800 overflow-hidden relative cursor-pointer group">
+                                    <img src="https://picsum.photos/seed/volley3/300/300" class="w-full h-full object-cover group-hover:scale-110 transition-transform">
+                                    <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-sm">+5 더보기</div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="lg:col-span-1">
+                        <div class="sticky top-24 space-y-4">
+                            <div class="bg-surface border border-border rounded-2xl p-6 text-center shadow-lg">
+                                <p class="text-brand-end font-bold text-sm mb-2">🔥 핫한 팀입니다!</p>
+                                <h3 class="text-xl font-bold text-primary mb-1">신규 회원 모집 중</h3>
+                                <p class="text-xs text-muted mb-6">최근 일주일 동안 5명이 문의했습니다.</p>
+                                
+                                <button onclick="alert('가입 신청서 양식을 불러옵니다...')" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-start to-brand-end text-white font-bold text-base hover:opacity-90 transition-all shadow-lg shadow-brand-start/20 mb-3">
+                                    가입 신청하기
+                                </button>
+                                <button onclick="alert('팀장에게 1:1 메시지 창을 엽니다.')" class="w-full py-3.5 rounded-xl border border-border bg-background text-primary font-bold text-base hover:bg-surface transition-colors flex items-center justify-center gap-2">
+                                    <i data-lucide="message-circle" class="w-4 h-4"></i> 문의하기
+                                </button>
+                            </div>
+
+                            <div class="bg-surface/30 border border-border rounded-2xl p-5">
+                                <h4 class="text-xs font-bold text-muted mb-3 uppercase tracking-wider">운영진 (Leaders)</h4>
+                                <div class="space-y-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="relative">
+                                            <img src="https://i.pravatar.cc/150?u=captain" class="w-10 h-10 rounded-full border border-border">
+                                            <span class="absolute -bottom-1 -right-1 bg-yellow-500 text-black text-[8px] font-bold px-1.5 py-0.5 rounded-full border border-surface">CAPT</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-bold text-primary">스파이크왕</p>
+                                            <p class="text-xs text-muted">팀장 · 공격수</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3">
+                                        <div class="relative">
+                                            <img src="https://i.pravatar.cc/150?u=manager" class="w-8 h-8 rounded-full border border-border">
+                                            <span class="absolute -bottom-1 -right-1 bg-zinc-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full border border-surface">MGR</span>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-bold text-primary">디그요정</p>
+                                            <p class="text-xs text-muted">총무 · 리베로</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         function toggleSidebar() { 
@@ -178,6 +352,62 @@
         function resetSelect(type) { const textEl = document.getElementById('text-' + type); textEl.innerText = "전체"; textEl.classList.remove('text-primary', 'font-bold'); textEl.classList.add('text-muted'); document.getElementById('drop-' + type).innerHTML = ''; }
         window.onclick = function() { document.querySelectorAll('.dropdown-menu').forEach(el => el.classList.remove('show')); }
         function handleSearch() { document.getElementById('search-hero').style.height = '40vh'; const results = document.getElementById('search-results'); results.classList.remove('hidden'); setTimeout(() => { results.classList.remove('opacity-0'); }, 100); const sido = document.getElementById('text-sido').innerText; const sigungu = document.getElementById('text-sigungu').innerText; const dong = document.getElementById('text-dong').innerText; let resultText = "전체 지역"; if(sido !== "지역 선택") resultText = sido; if(sigungu !== "전체") resultText += " " + sigungu; if(dong !== "전체") resultText += " " + dong; document.getElementById('result-title').innerText = resultText; }
+
+        // [팀 상세 팝업 로직 - 고도화]
+        function openTeamModal(teamName) {
+            // 1. 모달 요소 가져오기
+            const modal = document.getElementById('team-modal');
+            const title = document.getElementById('modal-team-name');
+            const heroName = document.getElementById('modal-hero-name');
+            const logo = document.getElementById('modal-logo-img');
+            const location = document.getElementById('modal-location');
+            const time = document.getElementById('modal-time');
+            const desc = document.getElementById('modal-desc');
+            const count = document.getElementById('modal-member-count');
+
+            // 2. 가짜 데이터(Mock Data) 세팅
+            title.innerText = teamName;
+            heroName.innerText = teamName;
+            
+            // 공통/랜덤 데이터 할당 (시연용)
+            if(teamName.includes('광명')) {
+                location.innerText = "경기 광명시 철산동";
+                time.innerText = "일요일 11:00 ~ 14:00";
+                logo.src = "https://picsum.photos/seed/volleyball1/200/200";
+                count.innerText = "24";
+                desc.innerHTML = `안녕하세요! <strong>${teamName}</strong>입니다.<br>저희는 실력보다는 인성을 중요하게 생각합니다.<br>20대부터 40대까지 다양한 연령층이 어우러져 즐겁게 운동하고 있습니다.<br><br>기본기 훈련 1시간, 자체 게임 2시간으로 진행됩니다.`;
+            } else if (teamName.includes('철산') || teamName.includes('윙스')) {
+                location.innerText = "경기 광명시 철산동";
+                time.innerText = "토요일 18:00 ~ 21:00";
+                logo.src = "https://picsum.photos/seed/volleyball3/200/200";
+                count.innerText = "15";
+                desc.innerHTML = `반갑습니다. <strong>${teamName}</strong>는 창단 1년차 신생 팀입니다.<br>초보자 분들이 부담 없이 배구를 시작하기 좋은 분위기입니다.<br>뒤풀이 강요 절대 없습니다! 오직 배구만 즐기세요.`;
+            } else if (teamName.includes('하이큐')) {
+                location.innerText = "서울 구로구";
+                time.innerText = "토요일 14:00";
+                logo.src = "https://picsum.photos/seed/volleyball5/200/200";
+                count.innerText = "30";
+                desc.innerHTML = `<strong>${teamName}</strong>는 열정으로 뭉친 팀입니다.<br>매주 치열한 자체전과 외부 교류전을 통해 실력을 키우고 있습니다.`;
+            } else {
+                location.innerText = "서울/경기 인근";
+                time.innerText = "주말 운동";
+                logo.src = "https://picsum.photos/seed/volleyball_gen/200/200";
+                count.innerText = "20";
+                desc.innerHTML = `<strong>${teamName}</strong>에 관심을 가져주셔서 감사합니다.<br>열정 있는 신입 회원을 언제나 환영합니다.`;
+            }
+
+            // 3. 모달 열기
+            modal.classList.remove('hidden'); 
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden'; // 배경 스크롤 방지
+        }
+
+        function closeTeamModal() {
+            const modal = document.getElementById('team-modal');
+            modal.classList.add('hidden'); 
+            modal.classList.remove('flex');
+            document.body.style.overflow = ''; // 스크롤 복구
+        }
     </script>
 </body>
 </html>
