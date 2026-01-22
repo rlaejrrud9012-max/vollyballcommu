@@ -14,7 +14,9 @@
             theme: {
                 extend: {
                     fontFamily: { sans: ['Pretendard', 'Inter', 'sans-serif'] },
-                    colors: { background: '#09090B', surface: '#18181B', surface_hover: '#27272A', primary: '#FAFAFA', secondary: '#A1A1AA', muted: '#71717A', border: '#27272A', brand: { start: '#FF7A6E', end: '#00AEEF' } }
+                    colors: { background: '#09090B', surface: '#18181B', surface_hover: '#27272A', primary: '#FAFAFA', secondary: '#A1A1AA', muted: '#71717A', border: '#27272A', brand: { start: '#FF7A6E', end: '#00AEEF' } },
+                    animation: { 'fade-in-up': 'fadeInUp 0.3s ease-out forwards' },
+                    keyframes: { fadeInUp: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } } }
                 }
             }
         }
@@ -96,15 +98,15 @@
     <main class="flex-1 h-full overflow-y-auto bg-background relative">
         <header class="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b border-border px-6 h-[72px] flex justify-between items-center gap-4">
             <h1 class="text-xl font-bold whitespace-nowrap">배구 소식</h1>
-            <div class="flex gap-2">
-                <button class="px-3 py-1.5 rounded-lg bg-surface border border-brand-end text-brand-end text-xs font-bold transition-colors">전체</button>
-                <button class="px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-brand-end hover:text-brand-end text-muted text-xs font-medium transition-colors">V리그</button>
-                <button class="px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-brand-end hover:text-brand-end text-muted text-xs font-medium transition-colors">국가대표</button>
+            <div class="flex gap-2" id="category-filters">
+                <button onclick="filterNews('all')" class="filter-btn px-3 py-1.5 rounded-lg border border-brand-end text-brand-end text-xs font-bold transition-colors active" data-cat="all">전체</button>
+                <button onclick="filterNews('V리그')" class="filter-btn px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-brand-end hover:text-brand-end text-muted text-xs font-medium transition-colors" data-cat="V리그">V리그</button>
+                <button onclick="filterNews('국가대표')" class="filter-btn px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-brand-end hover:text-brand-end text-muted text-xs font-medium transition-colors" data-cat="국가대표">국가대표</button>
             </div>
         </header>
 
         <div class="p-8 pb-20">
-            <section class="mb-10">
+            <section class="mb-10" id="hero-section">
                 <div onclick="openNewsModal(0)" class="news-card cursor-pointer group relative w-full h-80 rounded-2xl overflow-hidden border border-border bg-zinc-900">
                     <img src="https://images.unsplash.com/photo-1592656094267-764a45160876?auto=format&fit=crop&q=80&w=1600" referrerpolicy="no-referrer" class="news-image w-full h-full object-cover opacity-60 transition-transform duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
@@ -116,16 +118,37 @@
                     </div>
                 </div>
             </section>
+
             <section>
-                <h3 class="text-lg font-bold mb-4 flex items-center gap-2"><i data-lucide="zap" class="w-5 h-5 text-yellow-500"></i> 실시간 뉴스</h3>
+                <div class="flex justify-between items-end mb-4">
+                    <h3 class="text-lg font-bold flex items-center gap-2"><i data-lucide="zap" class="w-5 h-5 text-yellow-500"></i> 실시간 뉴스</h3>
+                    <span id="search-status" class="text-xs text-brand-end hidden">검색 결과 확인 중...</span>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="news-grid"></div>
+                <div id="no-result" class="hidden py-20 text-center text-muted text-sm">
+                    <i data-lucide="search-x" class="w-10 h-10 mx-auto mb-2 opacity-50"></i>
+                    검색 결과가 없습니다.
+                </div>
             </section>
         </div>
     </main>
 
     <aside class="w-[450px] h-full p-6 hidden lg:block bg-background overflow-y-auto flex-shrink-0 border-l border-border">
-        <div class="relative group mb-8"><div class="absolute inset-y-0 left-3 flex items-center pointer-events-none"><i data-lucide="search" class="w-4 h-4 text-muted"></i></div><input type="text" placeholder="기사 검색..." class="w-full bg-surface border border-border text-primary text-sm rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:border-brand-end"></div>
-        <div class="mb-8"><h3 class="text-xs font-bold text-muted uppercase tracking-wider mb-4">실시간 인기 키워드</h3><div class="flex flex-wrap gap-2"><span class="px-3 py-1.5 rounded-full bg-surface border border-border text-xs text-secondary hover:text-brand-end hover:border-brand-end cursor-pointer transition-colors">#김연경</span><span class="px-3 py-1.5 rounded-full bg-surface border border-border text-xs text-secondary hover:text-brand-end hover:border-brand-end cursor-pointer transition-colors">#V리그</span><span class="px-3 py-1.5 rounded-full bg-surface border border-border text-xs text-secondary hover:text-brand-end hover:border-brand-end cursor-pointer transition-colors">#남자배구</span></div></div>
+        <div class="relative group mb-8">
+            <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none"><i data-lucide="search" class="w-4 h-4 text-muted"></i></div>
+            <input type="text" id="news-search" placeholder="기사 검색..." onkeyup="handleSearch()" class="w-full bg-surface border border-border text-primary text-sm rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:border-brand-end transition-all">
+        </div>
+        
+        <div class="mb-8">
+            <h3 class="text-xs font-bold text-muted uppercase tracking-wider mb-4">실시간 인기 키워드</h3>
+            <div class="flex flex-wrap gap-2">
+                <button onclick="searchKeyword('김연경')" class="px-3 py-1.5 rounded-full bg-surface border border-border text-xs text-secondary hover:text-brand-end hover:border-brand-end cursor-pointer transition-colors">#김연경</button>
+                <button onclick="searchKeyword('V리그')" class="px-3 py-1.5 rounded-full bg-surface border border-border text-xs text-secondary hover:text-brand-end hover:border-brand-end cursor-pointer transition-colors">#V리그</button>
+                <button onclick="searchKeyword('남자배구')" class="px-3 py-1.5 rounded-full bg-surface border border-border text-xs text-secondary hover:text-brand-end hover:border-brand-end cursor-pointer transition-colors">#남자배구</button>
+                <button onclick="searchKeyword('드래프트')" class="px-3 py-1.5 rounded-full bg-surface border border-border text-xs text-secondary hover:text-brand-end hover:border-brand-end cursor-pointer transition-colors">#드래프트</button>
+            </div>
+        </div>
+        
         <div class="mb-4 flex items-center justify-between"><h3 class="text-xs font-bold text-muted uppercase tracking-wider">많이 본 뉴스</h3></div>
         <div class="space-y-4" id="popular-news-list"></div>
     </aside>
@@ -160,6 +183,7 @@
     </div>
 
     <script>
+        // 사이드바 토글
         function toggleSidebar() { 
             const sidebar = document.getElementById('left-sidebar');
             sidebar.classList.toggle('collapsed');
@@ -170,21 +194,103 @@
         }
         lucide.createIcons();
 
+        // 뉴스 데이터 (카테고리 필터링을 위해 group 추가)
         const newsData = [
-            { id: 0, title: "대한항공, 챔피언결정전 5차전 끝내기 승리... '통합 4연패' 위업 달성", summary: "마지막까지 손에 땀을 쥐게 하는 명승부였다.", content: "본문 내용...", image: "https://images.unsplash.com/photo-1592656094267-764a45160876?auto=format&fit=crop&q=80&w=1600", source: "스포츠조선", date: "2시간 전", category: "HEADLINE", comments: 128 },
-            { id: 1, title: "현대캐피탈, 외국인 선수 교체 승부수... '새 용병 내일 입국'", summary: "봄 배구를 앞두고 현대캐피탈이 결단을 내렸다.", content: "본문 내용...", image: "https://images.unsplash.com/photo-1612872087720-48ca45e4c6c0?auto=format&fit=crop&q=80&w=800", source: "STN 스포츠", date: "4시간 전", category: "이적시장", comments: 42 },
-            { id: 2, title: "김연경, 은퇴설 일축 \"아직 코트 위에서 할 일이 남았다\"", summary: "배구 여제 김연경이 시즌 종료 후 불거진 은퇴설에 대해 직접 입을 열었다.", content: "본문 내용...", image: "https://images.unsplash.com/photo-1626248318058-2920247df216?auto=format&fit=crop&q=80&w=800", source: "엑스포츠뉴스", date: "6시간 전", category: "인터뷰", comments: 205 },
-            { id: 3, title: "V리그 남자부 신인 드래프트, 전체 1순위의 영광은 누구에게?", summary: "내일 열리는 신인 드래프트에 배구계의 이목이 쏠리고 있다.", content: "본문 내용...", image: "https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&q=80&w=800", source: "더스파이크", date: "1일 전", category: "드래프트", comments: 18 },
-            { id: 4, title: "[분석] 아시아쿼터 도입 1년, V리그에 미친 영향과 과제", summary: "아시아쿼터 제도가 시행된 지 한 시즌이 지났다.", content: "본문 내용...", image: "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?auto=format&fit=crop&q=80&w=800", source: "OSEN", date: "1일 전", category: "칼럼", comments: 56 }
+            { id: 0, title: "대한항공, 챔피언결정전 5차전 끝내기 승리... '통합 4연패' 위업 달성", summary: "마지막까지 손에 땀을 쥐게 하는 명승부였다.", content: "본문...", image: "https://images.unsplash.com/photo-1592656094267-764a45160876?auto=format&fit=crop&q=80&w=1600", source: "스포츠조선", date: "2시간 전", category: "HEADLINE", group: "V리그", comments: 128 },
+            { id: 1, title: "현대캐피탈, 외국인 선수 교체 승부수... '새 용병 내일 입국'", summary: "봄 배구를 앞두고 현대캐피탈이 결단을 내렸다.", content: "본문...", image: "https://images.unsplash.com/photo-1612872087720-48ca45e4c6c0?auto=format&fit=crop&q=80&w=800", source: "STN 스포츠", date: "4시간 전", category: "이적시장", group: "V리그", comments: 42 },
+            { id: 2, title: "김연경, 은퇴설 일축 \"아직 코트 위에서 할 일이 남았다\"", summary: "배구 여제 김연경이 시즌 종료 후 불거진 은퇴설에 대해 직접 입을 열었다.", content: "본문...", image: "https://images.unsplash.com/photo-1626248318058-2920247df216?auto=format&fit=crop&q=80&w=800", source: "엑스포츠뉴스", date: "6시간 전", category: "인터뷰", group: "V리그", comments: 205 },
+            { id: 3, title: "V리그 남자부 신인 드래프트, 전체 1순위의 영광은 누구에게?", summary: "내일 열리는 신인 드래프트에 배구계의 이목이 쏠리고 있다.", content: "본문...", image: "https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&q=80&w=800", source: "더스파이크", date: "1일 전", category: "드래프트", group: "V리그", comments: 18 },
+            { id: 4, title: "[분석] 아시아쿼터 도입 1년, V리그에 미친 영향과 과제", summary: "아시아쿼터 제도가 시행된 지 한 시즌이 지났다.", content: "본문...", image: "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?auto=format&fit=crop&q=80&w=800", source: "OSEN", date: "1일 전", category: "칼럼", group: "V리그", comments: 56 },
+            { id: 5, title: "여자배구 국가대표팀, VNL 앞두고 진천선수촌 소집", summary: "새로운 감독과 함께하는 여자배구 대표팀이 파리 올림픽을 향한 여정을 시작했다.", content: "본문...", image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=800", source: "연합뉴스", date: "2일 전", category: "국가대표", group: "국가대표", comments: 88 }
         ];
-        const grid = document.getElementById('news-grid');
-        const popularList = document.getElementById('popular-news-list');
-        newsData.slice(1).forEach((news) => {
-            grid.innerHTML += `<div onclick="openNewsModal(${news.id})" class="news-card cursor-pointer group rounded-xl bg-surface border border-border overflow-hidden hover:border-brand-end/50 transition-all hover:-translate-y-1"><div class="h-40 w-full overflow-hidden relative"><img src="${news.image}" referrerpolicy="no-referrer" class="news-image w-full h-full object-cover transition-transform duration-500"><span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/60 backdrop-blur-md text-[10px] text-white border border-white/10">${news.category}</span></div><div class="p-4"><h3 class="font-bold text-base mb-2 group-hover:text-brand-end transition-colors line-clamp-2 leading-snug">${news.title}</h3><p class="text-xs text-secondary line-clamp-2 mb-3 leading-relaxed">${news.summary}</p><div class="flex justify-between items-center text-[10px] text-muted border-t border-border pt-3"><span>${news.source} · ${news.date}</span><span class="flex items-center gap-1"><i data-lucide="message-square" class="w-3 h-3"></i> ${news.comments}</span></div></div></div>`;
-            if(news.id <= 3) {
-                popularList.innerHTML += `<div onclick="openNewsModal(${news.id})" class="flex gap-3 cursor-pointer group"><div class="w-16 h-16 rounded-lg bg-zinc-800 overflow-hidden shrink-0"><img src="${news.image}" referrerpolicy="no-referrer" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity"></div><div><h4 class="text-xs font-bold text-primary group-hover:text-brand-end transition-colors line-clamp-2 mb-1">${news.title}</h4><span class="text-[10px] text-muted">${news.date}</span></div></div>`;
+
+        let currentFilter = 'all';
+        let searchQuery = '';
+
+        // [핵심] 뉴스 렌더링 함수
+        function renderNews() {
+            const grid = document.getElementById('news-grid');
+            const popularList = document.getElementById('popular-news-list');
+            const noResult = document.getElementById('no-result');
+            
+            grid.innerHTML = '';
+            
+            // 필터링 로직
+            const filteredNews = newsData.slice(1).filter(item => {
+                const matchCategory = currentFilter === 'all' || item.group === currentFilter;
+                const matchSearch = item.title.includes(searchQuery) || item.summary.includes(searchQuery);
+                return matchCategory && matchSearch;
+            });
+
+            // 결과 없음 처리
+            if (filteredNews.length === 0) {
+                noResult.classList.remove('hidden');
+            } else {
+                noResult.classList.add('hidden');
+                filteredNews.forEach((news) => {
+                    grid.innerHTML += `
+                    <div onclick="openNewsModal(${news.id})" class="news-card cursor-pointer group rounded-xl bg-surface border border-border overflow-hidden hover:border-brand-end/50 transition-all hover:-translate-y-1 animate-fade-in-up">
+                        <div class="h-40 w-full overflow-hidden relative">
+                            <img src="${news.image}" referrerpolicy="no-referrer" class="news-image w-full h-full object-cover transition-transform duration-500">
+                            <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/60 backdrop-blur-md text-[10px] text-white border border-white/10">${news.category}</span>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-bold text-base mb-2 group-hover:text-brand-end transition-colors line-clamp-2 leading-snug">${news.title}</h3>
+                            <p class="text-xs text-secondary line-clamp-2 mb-3 leading-relaxed">${news.summary}</p>
+                            <div class="flex justify-between items-center text-[10px] text-muted border-t border-border pt-3"><span>${news.source} · ${news.date}</span><span class="flex items-center gap-1"><i data-lucide="message-square" class="w-3 h-3"></i> ${news.comments}</span></div>
+                        </div>
+                    </div>`;
+                });
             }
-        });
+            
+            // 인기 뉴스 (사이드바) - 한 번만 렌더링해도 되지만 필터링 시 업데이트
+            if(popularList.innerHTML === '') {
+                newsData.slice(1, 5).forEach((news) => {
+                    popularList.innerHTML += `<div onclick="openNewsModal(${news.id})" class="flex gap-3 cursor-pointer group"><div class="w-16 h-16 rounded-lg bg-zinc-800 overflow-hidden shrink-0"><img src="${news.image}" referrerpolicy="no-referrer" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity"></div><div><h4 class="text-xs font-bold text-primary group-hover:text-brand-end transition-colors line-clamp-2 mb-1">${news.title}</h4><span class="text-[10px] text-muted">${news.date}</span></div></div>`;
+                });
+            }
+            
+            lucide.createIcons();
+        }
+
+        // [필터] 버튼 클릭
+        function filterNews(category) {
+            currentFilter = category;
+            
+            // 버튼 스타일 업데이트
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if(btn.dataset.cat === category) {
+                    btn.className = "filter-btn px-3 py-1.5 rounded-lg border border-brand-end text-brand-end text-xs font-bold transition-colors active";
+                } else {
+                    btn.className = "filter-btn px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-brand-end hover:text-brand-end text-muted text-xs font-medium transition-colors";
+                }
+            });
+            renderNews();
+        }
+
+        // [검색] 키워드 입력
+        function handleSearch() {
+            searchQuery = document.getElementById('news-search').value.trim();
+            const status = document.getElementById('search-status');
+            if(searchQuery) {
+                status.classList.remove('hidden');
+                status.innerText = `'${searchQuery}' 검색 결과`;
+            } else {
+                status.classList.add('hidden');
+            }
+            renderNews();
+        }
+
+        // [태그] 클릭
+        function searchKeyword(keyword) {
+            document.getElementById('news-search').value = keyword;
+            handleSearch();
+        }
+
+        // 초기 렌더링
+        window.onload = function() { renderNews(); };
+
+        // [팝업]
         function openNewsModal(index) {
             let data = newsData.find(item => item.id === index);
             if(!data) return;
