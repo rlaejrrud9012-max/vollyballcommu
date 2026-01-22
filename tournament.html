@@ -22,7 +22,6 @@
     <style>
         body { background-color: #09090B; color: #FAFAFA; }
         .hidden-tab { display: none; }
-        /* 팝업 관련 스타일 제거하고 Tailwind 유틸리티만 사용 */
     </style>
 </head>
 <body class="h-screen w-full flex text-sm">
@@ -48,7 +47,7 @@
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             <button onclick="openModal()" class="group relative rounded-xl bg-surface border border-border overflow-hidden hover:border-brand-end/50 transition-all hover:-translate-y-1 text-left w-full">
                 <div class="h-36 w-full bg-zinc-800 relative">
-                    <img src="https://images.unsplash.com/photo-1612872087720-48ca45e4c6c0?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                    <img src="https://images.unsplash.com/photo-1612872087720-48ca45e4c6c0?auto=format&fit=crop&q=80&w=800" referrerpolicy="no-referrer" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
                     <div class="absolute top-2 left-2 flex gap-1.5">
                         <span class="px-1.5 py-0.5 rounded bg-brand-end text-white text-[10px] font-bold">D-3</span>
                         <span class="px-1.5 py-0.5 rounded bg-black/50 backdrop-blur-md border border-white/10 text-white text-[10px]">접수중</span>
@@ -66,114 +65,107 @@
     </main>
 
     <div id="tournament-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-6">
-        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeModal()"></div>
         
-        <div class="bg-background w-full max-w-2xl rounded-2xl overflow-hidden relative z-10 shadow-2xl border border-border max-h-[90vh] flex flex-col animate-fade-in-up">
+        <div class="bg-background w-full max-w-6xl h-[85vh] rounded-2xl overflow-hidden relative z-10 shadow-2xl border border-border flex flex-col animate-fade-in-up">
             
-            <div class="sticky top-0 z-10 bg-background/95 backdrop-blur-md border-b border-border px-4 py-3 flex justify-between items-center shrink-0">
-                <h2 class="text-lg font-bold truncate pr-4">제1회 제미나이배 전국남녀생활체육배구대회</h2>
-                <button onclick="closeModal()" class="p-1 rounded-full hover:bg-surface text-muted hover:text-primary transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <div class="sticky top-0 z-10 bg-background/95 backdrop-blur-md border-b border-border px-6 py-4 flex justify-between items-center shrink-0">
+                <h2 class="text-xl font-bold truncate pr-4">제1회 제미나이배 전국남녀생활체육배구대회</h2>
+                <button onclick="closeModal()" class="p-2 rounded-full hover:bg-surface text-muted hover:text-primary transition-colors"><i data-lucide="x" class="w-6 h-6"></i></button>
             </div>
 
             <div class="overflow-y-auto hide-scrollbar flex-1">
-                <div class="relative h-48 bg-zinc-800 w-full overflow-hidden shrink-0">
-                    <img src="https://images.unsplash.com/photo-1612872087720-48ca45e4c6c0?auto=format&fit=crop&q=80&w=1200" class="w-full h-full object-cover opacity-60">
+                <div class="relative h-72 bg-zinc-800 w-full overflow-hidden shrink-0">
+                    <img src="https://images.unsplash.com/photo-1592656094267-764a45160876?auto=format&fit=crop&q=80&w=1600" referrerpolicy="no-referrer" class="w-full h-full object-cover opacity-70">
                     <div class="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
-                    <div class="absolute bottom-0 left-0 w-full p-5">
-                        <div class="flex items-center gap-2 mb-2"><span class="px-2 py-0.5 rounded bg-brand-end text-white text-xs font-bold">D-3</span><span class="px-2 py-0.5 rounded bg-surface/50 border border-white/10 text-white text-xs backdrop-blur-md">접수중</span></div>
-                        <p class="text-zinc-300 text-sm flex items-center gap-2"><i data-lucide="calendar" class="w-4 h-4"></i> 2026.02.15 (토) ~ 02.16 (일)</p>
+                    <div class="absolute bottom-0 left-0 w-full p-8">
+                        <div class="flex items-center gap-2 mb-2"><span class="px-3 py-1 rounded bg-brand-end text-white text-sm font-bold">D-3</span><span class="px-3 py-1 rounded bg-surface/50 border border-white/10 text-white text-sm backdrop-blur-md">접수중</span></div>
+                        <p class="text-zinc-200 text-base flex items-center gap-2 font-medium"><i data-lucide="calendar" class="w-5 h-5"></i> 2026.02.15 (토) ~ 02.16 (일)</p>
                     </div>
                 </div>
 
-                 <div class="p-5 grid grid-cols-2 gap-4 border-b border-border bg-surface/50 shrink-0">
-                    <div class="p-3 rounded-xl bg-surface border border-border">
-                        <p class="text-xs text-muted mb-1 font-bold">참가접수 기간</p>
-                        <p class="text-sm font-bold text-primary">26-01-01 09:00 <span class="text-muted font-normal">부터</span><br>26-01-31 18:00 <span class="text-muted font-normal">까지</span></p>
+                 <div class="p-8 grid grid-cols-2 gap-6 border-b border-border bg-surface/30 shrink-0">
+                    <div class="p-5 rounded-xl bg-surface border border-border">
+                        <p class="text-sm text-muted mb-2 font-bold">참가접수 기간</p>
+                        <p class="text-lg font-bold text-primary">26-01-01 09:00 <span class="text-muted font-normal text-sm">부터</span><br>26-01-31 18:00 <span class="text-muted font-normal text-sm">까지</span></p>
                     </div>
-                    <div class="p-3 rounded-xl bg-surface border border-border flex flex-col justify-center text-center">
-                        <p class="text-xs text-muted mb-2 font-bold">대회요강 파일</p>
-                        <button class="w-full py-2 rounded-lg bg-surface_hover border border-border hover:bg-zinc-700 transition-colors flex items-center justify-center gap-2 text-sm text-brand-end font-medium"><i data-lucide="download" class="w-4 h-4"></i> 다운로드</button>
-                    </div>
-                </div>
-
-                <div class="px-5 border-b border-border sticky top-0 bg-background z-10 shrink-0">
-                    <div class="flex gap-6">
-                        <button id="tab-btn-main" onclick="switchTab('main')" class="py-3 border-b-2 border-brand-end text-brand-end font-bold text-sm transition-colors">메인</button>
-                        <button id="tab-btn-outline" onclick="switchTab('outline')" class="py-3 border-b-2 border-transparent text-muted hover:text-primary transition-colors text-sm">대회요강</button>
+                    <div class="p-5 rounded-xl bg-surface border border-border flex flex-col justify-center text-center">
+                        <p class="text-sm text-muted mb-3 font-bold">대회요강 파일</p>
+                        <button class="w-full py-3 rounded-lg bg-surface_hover border border-border hover:bg-zinc-700 transition-colors flex items-center justify-center gap-2 text-base text-brand-end font-bold"><i data-lucide="download" class="w-5 h-5"></i> 다운로드</button>
                     </div>
                 </div>
 
-                <div class="p-5">
+                <div class="px-8 border-b border-border sticky top-0 bg-background z-10 shrink-0">
+                    <div class="flex gap-8">
+                        <button id="tab-btn-main" onclick="switchTab('main')" class="py-4 border-b-2 border-brand-end text-brand-end font-bold text-base transition-colors">메인</button>
+                        <button id="tab-btn-outline" onclick="switchTab('outline')" class="py-4 border-b-2 border-transparent text-muted hover:text-primary transition-colors text-base">대회요강</button>
+                    </div>
+                </div>
+
+                <div class="p-8">
                     <div id="tab-content-main">
-                        <div class="bg-surface border border-border rounded-xl p-3 mb-6">
-                            <div class="flex gap-3 mb-3">
-                                <img src="https://i.pravatar.cc/150?u=myprofile" class="w-8 h-8 rounded-full bg-background border border-border">
-                                <textarea id="commentInput" placeholder="응원 메시지를 남겨주세요!" class="w-full bg-transparent text-primary resize-none focus:outline-none h-10 py-2 placeholder-muted text-sm"></textarea>
+                        <div class="bg-surface border border-border rounded-xl p-4 mb-8">
+                            <div class="flex gap-4 mb-4">
+                                <img src="https://i.pravatar.cc/150?u=myprofile" class="w-10 h-10 rounded-full bg-background border border-border">
+                                <textarea id="commentInput" placeholder="응원 메시지를 남겨주세요!" class="w-full bg-transparent text-primary resize-none focus:outline-none h-12 py-2 placeholder-muted text-base"></textarea>
                             </div>
-                            <div class="flex justify-end"><button onclick="addComment()" class="px-3 py-1.5 rounded-lg bg-surface_hover border border-border text-primary font-medium hover:bg-zinc-700 transition-all text-xs">등록</button></div>
+                            <div class="flex justify-end"><button onclick="addComment()" class="px-5 py-2 rounded-lg bg-surface_hover border border-border text-primary font-medium hover:bg-zinc-700 transition-all text-sm">등록</button></div>
                         </div>
-                        <div id="comment-list" class="space-y-4">
-                            <div class="flex gap-3"><img src="https://i.pravatar.cc/150?u=33" class="w-8 h-8 rounded-full border border-border"><div><div class="flex items-center gap-2 mb-0.5"><span class="font-bold text-sm">SpikeMaster</span><span class="text-xs text-muted">5시간 전</span></div><p class="text-sm text-secondary">이번엔 꼭 우승합니다! 🔥</p></div></div>
+                        <div id="comment-list" class="space-y-6">
+                            <div class="flex gap-4"><img src="https://i.pravatar.cc/150?u=33" class="w-10 h-10 rounded-full border border-border"><div><div class="flex items-center gap-2 mb-1"><span class="font-bold text-base">SpikeMaster</span><span class="text-xs text-muted">5시간 전</span></div><p class="text-base text-secondary">이번엔 꼭 우승합니다! 🔥</p></div></div>
                         </div>
                     </div>
 
                     <div id="tab-content-outline" class="hidden-tab">
-                        <div class="space-y-6">
+                        <div class="space-y-8">
                             <div>
-                                <h3 class="text-sm font-bold mb-3 flex items-center gap-2"><i data-lucide="info" class="w-4 h-4 text-brand-end"></i> 대회 개요</h3>
-                                <div class="text-sm text-secondary leading-relaxed bg-surface p-4 rounded-xl border border-border">
+                                <h3 class="text-base font-bold mb-4 flex items-center gap-2"><i data-lucide="info" class="w-5 h-5 text-brand-end"></i> 대회 개요</h3>
+                                <div class="text-base text-secondary leading-relaxed bg-surface p-6 rounded-xl border border-border">
                                     <p>제1회 제미나이배는 순수 아마추어 정신을 바탕으로 모두가 즐길 수 있는 축제의 장입니다.</p>
-                                    <ul class="list-disc list-inside mt-3 space-y-1 text-muted text-xs">
+                                    <ul class="list-disc list-inside mt-4 space-y-2 text-muted text-sm">
                                         <li><strong>주최/주관:</strong> 제미나이 스포츠</li>
                                         <li><strong>사용구:</strong> 스타 그랜드 챔피언</li>
                                     </ul>
                                 </div>
                             </div>
                             <div>
-                                <h3 class="text-sm font-bold mb-3 flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-brand-start"></i> 경기장</h3>
-                                <div class="flex items-center gap-3 bg-surface p-4 rounded-xl border border-border justify-between">
-                                    <div><h4 class="font-bold text-primary text-sm">광명시민체육관</h4><p class="text-xs text-muted mt-0.5">경기도 광명시 철산동 오리로 703</p></div>
-                                    <a href="https://www.google.com/maps/search/?api=1&query=광명시민체육관" target="_blank" class="p-2 rounded-lg bg-background border border-border text-brand-end hover:bg-surface transition-colors"><i data-lucide="map" class="w-5 h-5"></i></a>
+                                <h3 class="text-base font-bold mb-4 flex items-center gap-2"><i data-lucide="map-pin" class="w-5 h-5 text-brand-start"></i> 경기장</h3>
+                                <div class="flex items-center gap-4 bg-surface p-6 rounded-xl border border-border justify-between">
+                                    <div><h4 class="font-bold text-primary text-lg">광명시민체육관</h4><p class="text-sm text-muted mt-1">경기도 광명시 철산동 오리로 703</p></div>
+                                    <a href="https://www.google.com/maps/search/?api=1&query=광명시민체육관" target="_blank" class="px-4 py-2 rounded-lg bg-background border border-border text-brand-end hover:bg-surface transition-colors flex items-center gap-2 font-bold"><i data-lucide="map" class="w-5 h-5"></i> 지도 보기</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-             <div class="p-4 border-t border-border bg-background shrink-0">
-                <button class="w-full py-3 rounded-xl bg-gradient-to-r from-brand-start to-brand-end text-white font-bold text-sm hover:opacity-90 transition-all shadow-lg shadow-brand-start/20">참가 신청하기</button>
+             <div class="p-6 border-t border-border bg-background shrink-0">
+                <button class="w-full py-4 rounded-xl bg-gradient-to-r from-brand-start to-brand-end text-white font-bold text-lg hover:opacity-90 transition-all shadow-lg shadow-brand-start/20">참가 신청하기</button>
             </div>
         </div>
     </div>
 
     <script>
         lucide.createIcons();
-
-        // [핵심] 모달 제어 로직 수정 (Flex로 명확하게 표시)
         function openModal() { 
             const modal = document.getElementById('tournament-modal');
-            modal.classList.remove('hidden'); 
-            modal.classList.add('flex'); // hidden 제거 후 flex 추가하여 중앙 정렬
+            modal.classList.remove('hidden'); modal.classList.add('flex');
             document.body.style.overflow = 'hidden'; 
         }
-
         function closeModal() { 
             const modal = document.getElementById('tournament-modal');
-            modal.classList.add('hidden'); 
-            modal.classList.remove('flex'); // 다시 숨김
+            modal.classList.add('hidden'); modal.classList.remove('flex');
             document.body.style.overflow = ''; 
         }
-
         function switchTab(tabName) {
             document.getElementById('tab-content-main').classList.add('hidden-tab'); document.getElementById('tab-content-outline').classList.add('hidden-tab');
             document.getElementById('tab-content-' + tabName).classList.remove('hidden-tab');
-            document.getElementById('tab-btn-main').className = document.getElementById('tab-btn-outline').className = "py-3 border-b-2 border-transparent text-muted hover:text-primary transition-colors text-sm";
-            document.getElementById('tab-btn-' + tabName).className = "py-3 border-b-2 border-brand-end text-brand-end font-bold text-sm transition-colors";
+            document.getElementById('tab-btn-main').className = document.getElementById('tab-btn-outline').className = "py-4 border-b-2 border-transparent text-muted hover:text-primary transition-colors text-base";
+            document.getElementById('tab-btn-' + tabName).className = "py-4 border-b-2 border-brand-end text-brand-end font-bold text-base transition-colors";
         }
-
         function addComment() {
             const input = document.getElementById('commentInput'); const text = input.value.trim(); if(!text) return;
-            document.getElementById('comment-list').insertAdjacentHTML('afterbegin', `<div class="flex gap-3 animate-fade-in"><img src="https://i.pravatar.cc/150?u=myprofile" class="w-8 h-8 rounded-full border border-border"><div><div class="flex items-center gap-2 mb-0.5"><span class="font-bold text-sm">형님 (Admin)</span><span class="text-xs text-brand-end">방금 전</span></div><p class="text-sm text-primary">${text}</p></div></div>`);
+            document.getElementById('comment-list').insertAdjacentHTML('afterbegin', `<div class="flex gap-4 animate-fade-in"><img src="https://i.pravatar.cc/150?u=myprofile" class="w-10 h-10 rounded-full border border-border"><div><div class="flex items-center gap-2 mb-1"><span class="font-bold text-base">형님 (Admin)</span><span class="text-xs text-brand-end">방금 전</span></div><p class="text-base text-primary">${text}</p></div></div>`);
             input.value = '';
         }
     </script>
